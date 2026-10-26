@@ -5,7 +5,7 @@ export const stage0: Stage = {
   number: 0,
   title: 'Understanding Automation',
   subtitle: 'The Automation Mindset & Architecture Foundations',
-  description: 'Deconstruct manual business workflows into deterministic, event-driven automated systems. Understand how n8n compares to legacy tools and learn how to safely set up your local development environment.',
+  description: 'Learn what automation really is through everyday analogies, explore the easiest way to launch n8n in your browser, and build your very first working 3-step automation without writing a single line of code.',
   badge: 'Stage 0 • Fundamentals',
   accentColor: '#3B82F6',
   modules: [
@@ -14,8 +14,8 @@ export const stage0: Stage = {
       number: 0,
       stageId: 'stage-0',
       title: 'Orientation and the Automation Mindset',
-      subtitle: 'From Repetitive Tasks to Scalable Systems',
-      description: 'Understand what workflow automation is, how n8n differs from traditional code and SaaS tools like Zapier/Make, and how professional automation engineers break down business logic.',
+      subtitle: 'From Repetitive Daily Tasks to Simple Automated Systems',
+      description: 'Discover what workflow automation is, how n8n connects your everyday apps like an orchestra conductor, and how anyone can break down a human task into simple steps without coding.',
       difficulty: 'Beginner',
       estimatedMinutes: 45,
       lessons: [
@@ -23,34 +23,29 @@ export const stage0: Stage = {
           id: 'lesson-0-1',
           moduleId: 'module-0',
           stageId: 'stage-0',
-          title: 'The Automation Mindset: Deconstructing Business Workflows',
-          subtitle: 'How to think like a professional automation architect',
+          title: 'What is Automation? The Everyday Mindset',
+          subtitle: 'How to turn repetitive human chores into simple, reliable steps',
           difficulty: 'Beginner',
-          estimatedMinutes: 45,
-          prerequisites: ['No prior technical knowledge required'],
-          whyItMatters: 'Every business wastes hundreds of human hours every month on "digital swivel-chair work"—manually copying leads from forms to spreadsheets, drafting notification emails, and updating CRM records. If you understand how to translate human operations into atomic, deterministic triggers and actions, you can build reliable automation systems that run 24/7 without mistakes.',
-          relatableProblem: 'Imagine a small B2B consulting company: Whenever a prospective client fills out a website contact form, an office manager has to check their inbox, open Salesforce, check whether the company already exists, copy-paste the contact information, compose a Slack alert to the sales team, and manually send a booking calendar link. If the manager is on lunch, sick, or busy, the lead waits 4 hours. By that time, 78% of B2B buyers have already booked a call with a competitor.',
-          firstPrinciplesExplanation: 'At its core, all digital workflow automation is founded on three fundamental components:\n1. The Trigger (The Event): "When this happens in the outside world..." (e.g. an HTTP webhook arrives, a timer fires, or a file is uploaded).\n2. The Data (The Payload): A structured parcel of digital information (almost universally formatted as JSON in modern computing) that describes the event.\n3. The Actions (The Deterministic Steps): A chain of sequential or parallel transformations, database queries, API requests, and conditional checks that operate on that data.\n\nTraditional programming accomplishes this by writing backend servers in Python, Node.js, or Go from scratch. While powerful, pure code requires maintaining server infrastructure, boilerplate OAuth token refresh routines, and custom error handling. SaaS tools like Zapier or Make offer drag-and-drop ease but lock your data into proprietary closed-source clouds with prohibitive per-task pricing.\n\nn8n bridges this gap: It is a node-based, fair-code workflow automation platform that gives you the visual clarity of a canvas with the full programmatic power of custom JavaScript, Docker self-hosting, database access, and advanced AI agent capabilities.',
+          estimatedMinutes: 30,
+          prerequisites: ['No prior programming or technical knowledge required'],
+          whyDoINeedThis: 'Think about how much time you waste copying text from emails into spreadsheets, sending the same booking link 20 times a day, or typing manual notifications. Automation allows you to create a simple recipe once, and let your computer carry it out 24/7 without fatigue, delays, or typos.',
+          relatableProblem: 'Imagine you run a small local bike shop: Whenever a customer fills out the contact form on your website asking to rent a bicycle, you have to stop what you are doing, open your email, write their phone number down in a notebook, check the calendar for available bikes, and email them back a rental quote. If you are busy repairing a bike, the customer waits 4 hours and ends up renting from another shop down the street.',
+          firstPrinciplesExplanation: 'You do not need to be a programmer or a computer scientist to understand automation. In fact, you already practice automation every single day in real life!\n\nImagine making a cup of morning tea:\n1. The Trigger (The Event): You wake up in the morning and feel thirsty.\n2. The Ingredients (The Information): You have water, tea leaves, and milk.\n3. The Recipe (The Actions): You boil the water, steep the tea, stir in the milk, and pour it into a cup.\n\nDigital automation in n8n works in the exact same 3-step sequence:\n1. An Event Happens (The Trigger): A customer fills out a website form, a new email arrives, or the clock strikes 9:00 AM on Monday.\n2. Information Arrives (The Data): The customer\'s name, their phone number, and what bicycle they want to rent.\n3. The Steps are Performed (The Actions): n8n automatically records their booking in your spreadsheet, alerts your team on Slack, and sends the customer a confirmation email.\n\nWhat is n8n?\nThink of n8n as an orchestra conductor. Your apps (Google Sheets, Gmail, Slack, WhatsApp, Notion) are musicians in an orchestra. When left on their own, they cannot talk to each other. n8n stands on the podium in the center, waving the baton so all your apps play together in perfect harmony.\n\nBest of all: n8n is completely visual. Instead of typing thousands of lines of cryptic code, you connect visual boxes (called nodes) with simple arrows on a digital canvas.',
           visualExplanation: {
             diagramType: 'mermaid',
-            caption: 'Manual Human Swivel-Chair Work vs. Deterministic n8n Workflow',
+            caption: 'Everyday Human Chores vs. A Visual n8n Automation',
             mermaidCode: `graph TD
-  subgraph Manual["Traditional Manual Swivel-Chair Process (High Latency, Prone to Fatigue)"]
-    A[Prospect Submits Web Form] -->|Waits in Inbox 1-4 hrs| B[Human Reads Email]
-    B -->|Manual Alt-Tab| C[Search CRM for Duplicate]
-    C -->|Manual Copy-Paste| D[Create Contact Record]
-    D -->|Manual Message| E[Type Alert in Slack Channel]
-    E -->|Manual Email| F[Send Welcome Email]
+  subgraph Manual["How Most People Do It Manually (Slow & Tiring)"]
+    M1[Customer Fills Out Form] -->|Waits in inbox for hours| M2[Human Manually Reads Email]
+    M2 -->|Copies Name & Phone| M3[Pasting into Spreadsheet]
+    M3 -->|Manual Typing| M4[Typing Message to Sales Team]
+    M4 -->|Manual Drafting| M5[Sending Booking Confirmation]
   end
 
-  subgraph Automated["n8n Deterministic Workflow (Execution Time: 340 milliseconds)"]
-    T1[Webhook Trigger: Form Submission] --> N1[Edit Fields: Normalize Phone & Email]
-    N1 --> N2{If: Lead Exists in CRM?}
-    N2 -->|No| N3[HubSpot: Create New Lead]
-    N2 -->|Yes| N4[HubSpot: Append Note & Timestamp]
-    N3 --> N5[Slack: Post Rich Lead Card with Accept Button]
-    N4 --> N5
-    N5 --> N6[Email: Send Dynamic Calendar Link]
+  subgraph Automated["How n8n Does It Automatically (Takes 300 Milliseconds)"]
+    A1[⚡ Form Submitted] --> A2[📝 Save to Google Sheet]
+    A2 --> A3[💬 Post Alert in Slack]
+    A3 --> A4[✉️ Send Email to Customer]
   end
 
   style Manual fill:#1E293B,stroke:#EF4444,stroke-width:2px,color:#F8FAFC
@@ -58,299 +53,379 @@ export const stage0: Stage = {
           },
           secondaryVisual: {
             diagramType: 'flow',
-            caption: 'The Five Atomic Pillars of Any Automation',
+            caption: 'The 3 Simple Universal Pieces of Any Automation',
             mermaidCode: `graph LR
-    TR[1. Trigger<br/>Event Initiator] --> DP[2. Data Payload<br/>Structured JSON]
-    DP --> LG[3. Logic & Rules<br/>If / Switch / Filters]
-    LG --> TF[4. Transformations<br/>Map, Calculate, Clean]
-    TF --> AC[5. Actions<br/>APIs, DBs, Notifications]`
+    TR["1. THE TRIGGER<br/>'When this event happens...'"] --> DT["2. THE INFORMATION<br/>'Here are the details...'"]
+    DT --> AC["3. THE ACTIONS<br/>'Do these steps in order...'"]`
           },
-          technicalDetails: 'When designing automations, engineers must distinguish between:\n- Event-Driven Triggers: Activated instantaneously via incoming HTTP POST webhooks, message bus queues, or database change data capture (CDC).\n- Polling / Scheduled Triggers: Activated on a defined chronometric interval (e.g., cron `0 9 * * 1-5` for business mornings) that queries an external API for records created since the last checkpoint.\n\nKey Automation Guardrails:\n- Determinism: Given the exact same input payload, your workflow must produce the exact same outcome every time.\n- Idempotency: Running the automation twice with the same record should not create duplicate invoices, double-charge a credit card, or send duplicate emails.\n- Graceful Degradation: If an external API (like Slack) is temporarily down, the workflow must catch the error, log the payload, and queue it for retry rather than silently dropping customer data.',
+          technicalDetails: 'Key Vocabulary Introduced Gently:\n- Workflow: The complete chain of connected steps (your automation recipe).\n- Node: Each individual box in your workflow that performs one specific job (like sending an email or reading a spreadsheet).\n- Trigger: The very first node on the left that starts the entire process.\n- Execution: A single run of your workflow from beginning to end.',
+          optionalAdvancedDetails: {
+            title: 'How n8n Compares to Tools Like Zapier & Make',
+            content: 'Zapier and Make are popular cloud automation services, but they charge you high monthly fees per task and lock your data inside their proprietary servers. n8n is "fair-code": you can use n8n Cloud for instant setup, or you can self-host n8n for free on your own computer or private server with complete data privacy and unlimited executions.'
+          },
           workedExample: {
-            scenario: 'Processing a raw contact form submission into a normalized sales notification payload.',
+            scenario: 'Turning a raw website contact inquiry into an organized customer record.',
             inputJson: {
-              "full_name": "  alice smith  ",
-              "email_address": "ALICE@AcmeCorp.COM",
-              "budget": "$15,000",
-              "phone": " +1 (555) 019-2834 ",
-              "interest": "Enterprise Custom Implementation"
+              "full_name": "Alice Smith",
+              "email": "alice@example.com",
+              "rental_date": "Tomorrow at 10 AM",
+              "bike_type": "Mountain Bike"
             },
-            transformationLogic: 'Trim whitespace, lowercase email, parse budget currency string into an integer (15000), format international phone number (E.164 standard), and assign priority routing flag.',
+            transformationLogic: 'Extract the customer details and package them into a clean notification card for the team.',
             outputJson: {
-              "leadId": "lead_98234",
-              "customer": {
-                "name": "Alice Smith",
-                "email": "alice@acmecorp.com",
-                "phone": "+15550192834"
-              },
-              "qualification": {
-                "budgetAmount": 15000,
-                "tier": "Tier 1 High Value",
-                "requiresExecutiveSponsor": true
-              },
-              "processedAt": "2026-10-25T00:00:00.000Z"
+              "customerName": "Alice Smith",
+              "contactEmail": "alice@example.com",
+              "rentalRequest": "Mountain Bike",
+              "status": "Ready for booking confirmation"
             },
-            explanation: 'Notice how the raw input contains messy whitespace, non-standard capitalization, and string-formatted currency. Before any downstream CRM or Slack node touches this data, n8n normalizes it into a reliable data structure.'
+            explanation: 'Notice how n8n takes the raw answers the customer typed into your form and neatly packages them so downstream apps (like your email or calendar) can use them instantly.'
           },
           stepByStepLab: {
-            title: 'Deconstructing a Real-World Repetitive Workflow',
-            goal: 'Analyze a messy business process and document its exact triggers, inputs, decision branches, and outputs.',
+            title: 'Deconstructing an Everyday Task into 3 Simple Steps',
+            goal: 'Pick a repetitive chore from your own life or work and identify its Trigger, Information, and Actions.',
             steps: [
               {
                 stepNumber: 1,
-                title: 'Identify the Trigger Event',
-                instruction: 'Determine what kicks off the process. Is it an employee action, a customer purchase, a cron schedule, or an incoming webhook? Document the exact data fields that arrive at this moment.'
+                title: 'Identify the Starting Event (The Trigger)',
+                instruction: 'Think about when this task starts. Does it begin when someone sends you a message? When an invoice arrives in your inbox? Or every Monday morning at 9:00 AM? Write down: "When [Event] happens..."',
+                tip: 'A trigger is always an event in time, never an ongoing state.'
               },
               {
                 stepNumber: 2,
-                title: 'Map Data Transformations and Cleanups',
-                instruction: 'List all fields that need sanitization: trimming spaces, standardizing date formats to ISO-8601, hashing passwords, or parsing phone numbers.'
+                title: 'Identify the Information You Need',
+                instruction: 'What details are necessary to complete the task? (For example: customer name, order number, amount, or email address).',
+                tip: 'Only collect the fields you actually need to do the job.'
               },
               {
                 stepNumber: 3,
-                title: 'Define the Decision Matrix',
-                instruction: 'Document every conditional rule. For example: "If budget > $10,000, assign to Senior VP; else assign to Inbound SDR pool."'
-              },
-              {
-                stepNumber: 4,
-                title: 'Document External System Side-Effects',
-                instruction: 'List every system that will be modified: which database table receives an INSERT, which Slack channel receives a webhook, and what customer email is dispatched.'
+                title: 'List the Actions in Numbered Order',
+                instruction: 'Write out the exact steps you take, one by one. Step 1: Record in spreadsheet. Step 2: Notify team. Step 3: Send confirmation.',
+                tip: 'Keep each action focused on doing one single thing.'
               }
             ],
-            expectedResult: 'A complete architectural blueprint that is ready to be implemented directly onto the n8n canvas.'
+            expectedResult: 'A clear 3-box outline on paper or in notes describing your task as: [Starting Event] ──► [Information Details] ──► [Next Steps].'
+          },
+          whatShouldISee: {
+            summary: 'You should have a clear mental model of how human actions translate into automated steps.',
+            indicators: [
+              'You can explain what a Trigger is using an everyday example (like an alarm clock or doorbell).',
+              'You understand that each box on the canvas is called a Node.',
+              'You know that data moves from left to right through connected arrows.'
+            ]
           },
           commonMistakes: [
             {
-              mistake: 'Automating a broken or undefined manual process.',
-              consequence: 'The automation will simply execute mistakes at 1,000 times the speed of a human, causing massive data corruption in production systems.',
-              correction: 'Standardize and document the manual process with human stakeholders first. Ensure the decision tree has no ambiguous "gut feeling" steps before touching n8n.'
+              mistake: 'Trying to build a 30-step automation on day one.',
+              consequence: 'You get overwhelmed, make configuration mistakes, and cannot tell which step caused the issue.',
+              correction: 'Always start with a simple 2-step or 3-step workflow. Get it working, verify the output, and only then add more steps.'
             },
             {
-              mistake: 'Assuming external APIs will never fail or change shape.',
-              consequence: 'Workflows fail silently in the middle of the night; customer orders are lost with no error trail.',
-              correction: 'Always configure error handling branches, retries with backoff, and alerting webhooks for non-2xx API responses.'
+              mistake: 'Thinking you need to know how to code in Python or JavaScript.',
+              consequence: 'Beginners feel intimidated and give up before testing their first node.',
+              correction: '90% of real-world automations require zero code. n8n provides pre-built buttons and forms for nearly every common task.'
             }
           ],
           knowledgeCheck: [
             {
-              id: 'q0-1',
-              question: 'Which of the following describes the difference between an event-driven trigger and a polling trigger?',
+              id: 'q0-1-1',
+              question: 'In plain English, what is a "Trigger" in an n8n workflow?',
               options: [
-                'Event-driven triggers execute on a fixed clock timer; polling triggers execute when a user presses Enter.',
-                'Event-driven triggers run immediately upon receiving an incoming HTTP push; polling triggers query an external API on a scheduled interval to check for new records.',
-                'Polling triggers are only used for AI models; event-driven triggers are only used for databases.',
-                'There is no difference; all triggers in n8n are event-driven.'
+                'A complex programming script that calculates numbers.',
+                'The starting event that wakes up and begins the workflow.',
+                'A password used to log in to your computer.',
+                'A button that deletes all your saved files.'
               ],
               correctIndex: 1,
-              explanation: 'Event-driven triggers (such as webhooks) listen passively and execute the millisecond a payload is pushed by an external provider. Polling triggers (such as checking Google Sheets every 15 minutes) actively query the external service on a timer.'
+              explanation: 'Just like an alarm clock waking you up or a doorbell ringing, a trigger is the starting event that kicks off your workflow.'
             },
             {
-              id: 'q0-2',
-              question: 'Why is idempotency a mandatory requirement in professional automation engineering?',
+              id: 'q0-1-2',
+              question: 'Which of the following best describes what a "Node" is?',
               options: [
-                'It ensures that workflows run faster by skipping JavaScript compilation.',
-                'It prevents duplicate side effects (such as double-charging a customer or duplicating records) if an execution is triggered multiple times with the same input payload.',
-                'It allows n8n to connect to non-HTTP servers.',
-                'It automatically translates English prompts into SQL queries.'
+                'A physical cable plugged into your router.',
+                'A single visual building block or step in a workflow that performs one specific job.',
+                'A paid subscription to a web service.',
+                'A mathematical formula from advanced calculus.'
               ],
               correctIndex: 1,
-              explanation: 'Idempotency guarantees that executing an operation multiple times with identical parameters produces the exact same state as executing it once, preventing critical production bugs like double billing or duplicate CRM entries.'
+              explanation: 'Each box on the n8n canvas is called a node. You connect nodes together like building blocks to create a complete recipe.'
             }
           ],
           practicalChallenge: {
-            prompt: 'Audit your current daily work or a client business. Write down a 5-step automation specification for an invoice intake workflow: Identify (1) Trigger, (2) Input Payload schema, (3) Data validation checks, (4) Decision branches, and (5) External system side-effects.',
+            prompt: 'Look at your own smartphone or computer habits. Name three repetitive tasks you do every week that follow the pattern: [Something Happens] ──► [I copy or move information] ──► [I send a response].',
             hints: [
-              'Consider what happens if an invoice email arrives without an attached PDF.',
-              'Think about duplicate invoice numbers from the same vendor.'
+              'Think about receiving receipts via email and saving them to a tax folder.',
+              'Think about getting calendar invitations and adding notes in your to-do app.'
             ],
-            solutionNotes: 'A robust design triggers on "New Email with Attachment in Billing Inbox", validates that the file is a PDF < 10MB, hashes the file or extracts the vendor ID + invoice number to query PostgreSQL for duplicates, routes invoices > $5,000 to CFO Slack for approval, and inserts approved records into QuickBooks.'
+            solutionNotes: 'Great examples include: (1) Saving email attachments to Google Drive automatically, (2) Posting a message in Slack when a new payment arrives on Stripe, and (3) Sending a reminder email 24 hours before a scheduled appointment.'
           },
           keyTakeaways: [
-            'Automation engineering is about translating human operational intent into deterministic, testable software pipelines.',
-            'Every automation requires a Trigger, Data Payload, Transformation Logic, Decision Rules, and External Side-Effects.',
-            'n8n combines the visual speed of a node canvas with the enterprise power of custom code, Docker hosting, and privacy compliance.'
+            'Automation is simply turning everyday human recipes into reliable digital steps.',
+            'Every automation consists of 3 pieces: The Trigger (When), The Information (What), and The Actions (Next Steps).',
+            'n8n lets you build these workflows visually by connecting nodes with arrows on a canvas.',
+            'You do not need to know any programming language to build powerful automations.'
           ],
           officialDocLinks: [
             {
-              title: 'Official n8n Introduction & Concepts',
+              title: 'Official n8n Introduction for Beginners',
               url: 'https://docs.n8n.io/getting-started/',
-              note: 'High-level conceptual overview of workflows, nodes, and executions.'
-            },
-            {
-              title: 'n8n Academy Course 101',
-              url: 'https://learn.n8n.io/',
-              note: 'Official certification course covering basic nodes and flow logic.'
+              note: 'Gentle overview of core concepts directly from the n8n creators.'
             }
           ]
-        }
-      ]
-    },
-    {
-      id: 'module-1',
-      number: 1,
-      stageId: 'stage-0',
-      title: 'Setting Up n8n',
-      subtitle: 'Cloud, Docker, and Safe Local Development',
-      description: 'Master the differences between n8n Cloud, local development, and self-hosted Docker environments. Learn how to configure ports, persistent volumes, environment variables, and encryption keys without exposing insecure instances to the web.',
-      difficulty: 'Beginner',
-      estimatedMinutes: 60,
-      lessons: [
+        },
         {
-          id: 'lesson-1-1',
-          moduleId: 'module-1',
+          id: 'lesson-0-2',
+          moduleId: 'module-0',
           stageId: 'stage-0',
-          title: 'n8n Deployment Options & Safe Local Setup',
-          subtitle: 'From zero to running your first secure local instance',
+          title: 'Opening Your n8n Workspace: The Easiest Ways to Start',
+          subtitle: 'How to get started in 60 seconds without complex server setup',
           difficulty: 'Beginner',
-          estimatedMinutes: 60,
-          prerequisites: ['Basic familiarity with running terminal commands'],
-          whyItMatters: 'Before building workflows, you need an environment. Unlike closed SaaS platforms where you just click sign-up, n8n gives you the superpower of running on your own machine or private cloud. Knowing how to set up Docker, manage environment variables, and configure volumes guarantees your data and credentials remain secure and persistent across restarts.',
-          relatableProblem: 'A beginner installs n8n locally using a temporary command without persistent volumes. After spending 8 hours building 10 complex customer workflows and configuring API credentials, they shut down their laptop or terminate the Docker container. The next morning, the container is destroyed, the auto-generated encryption key is lost, and all credentials and workflows have vanished. Understanding persistence prevents this catastrophe.',
-          firstPrinciplesExplanation: 'n8n is a Node.js application that stores workflows, execution history, and encrypted credentials in a database (SQLite for lightweight local development; PostgreSQL for production). It can run in three primary ways:\n\n1. n8n Cloud: Hosted and managed directly by n8n. Perfect for rapid prototyping or teams that do not want to manage Linux servers.\n2. Local npm Execution: Running `npx n8n` directly on your machine. Excellent for quick experiments, but depends on your host machine\'s Node.js runtime version.\n3. Docker Container (The Professional Standard): An isolated Linux container running the official `docker.n8n.io/n8nio/n8n` image. Ensures consistent runtime behavior regardless of operating system, binds a persistent volume on your host drive, and allows complete environment isolation.\n\nCrucial Security Rule: Local development instances must bind to `127.0.0.1` (localhost). Never expose an unauthenticated local development port `5678` to `0.0.0.0` or open router ports to the public internet without an SSL reverse proxy and strong authentication.',
+          estimatedMinutes: 25,
+          prerequisites: ['Lesson 0-1'],
+          whyDoINeedThis: 'You do not need to purchase a server, configure Linux, or learn complex terminal commands just to learn n8n. Choosing the right, simple setup lets you open your browser and start building workflows right away.',
+          relatableProblem: 'Many beginner tutorials immediately tell students to install Docker, configure terminal ports, and edit terminal YAML files. Beginners run into permission errors, get stuck on command prompts, and feel frustrated before they ever see the n8n visual editor. Starting with a zero-friction setup solves this completely.',
+          firstPrinciplesExplanation: 'There are two main ways to use n8n:\n\n1. Hosted in the Cloud (Easiest & Recommended for Beginners):\nJust like logging into Gmail, Google Docs, or Canva, n8n runs entirely on the web. You open your web browser (Chrome, Safari, Firefox), sign up for a free trial on n8n.io, and you have an instant, ready-to-use visual canvas in 60 seconds. There is nothing to install, configure, or maintain on your computer.\n\n2. Running on Your Own Computer (For Free Local Experiments):\nIf you already have Node.js on your computer, you can run a single command in your terminal (`npx n8n`) and open `http://localhost:5678` in your browser. This gives you a completely free sandbox that runs locally on your machine.\n\nWhat about Docker and Self-Hosting?\nRunning n8n inside Docker on a private Linux cloud server is the enterprise standard for production companies. But you do NOT need it to learn! We keep advanced Docker setup in a separate optional section so you can focus on mastering workflows first.',
           visualExplanation: {
             diagramType: 'mermaid',
-            caption: 'Comparison of n8n Deployment Architectures',
-            mermaidCode: `graph TB
-  subgraph LocalDev["1. Local Docker Development (Zero Cost, Complete Privacy)"]
-    D1[Developer Browser] -->|http://localhost:5678| C1[n8n Container: Port 5678]
-    C1 --> V1[(Host Volume: ~/.n8n<br/>Workflows & SQLite DB)]
-    C1 --> K1[Env: N8N_ENCRYPTION_KEY]
-  end
+            caption: 'Choosing Your Starting Path: Cloud vs. Local vs. Production',
+            mermaidCode: `graph TD
+  START[How would you like to start?] --> OPT1[Option A: n8n Cloud<br/>Recommended for Beginners]
+  START --> OPT2[Option B: Quick Local Test<br/>npx n8n on your laptop]
+  START --> OPT3[Option C: Advanced Self-Hosting<br/>Docker on Linux Server]
 
-  subgraph ProductionCloud["2. Production Self-Hosted (Scalable, High Availability)"]
-    U[External Webhooks & Users] -->|HTTPS 443| RP[Reverse Proxy: Caddy / Nginx / Traefik]
-    RP -->|Internal Network| NMAIN[n8n Main Webhook & Editor]
-    NMAIN --> REDIS[(Redis Queue Broker)]
-    REDIS --> W1[n8n Worker 1]
-    REDIS --> W2[n8n Worker 2]
-    NMAIN --> PG[(PostgreSQL Production DB)]
-    W1 --> PG
-    W2 --> PG
-  end
+  OPT1 -->|Takes 60 seconds| R1[✓ Open browser, start building immediately]
+  OPT2 -->|Takes 2 minutes| R2[✓ Free local sandbox on your machine]
+  OPT3 -->|For DevOps Engineers| R3[✓ Complete server control & private VPC]
 
-  style LocalDev fill:#0F172A,stroke:#3B82F6,stroke-width:2px,color:#F8FAFC
-  style ProductionCloud fill:#0F172A,stroke:#10B981,stroke-width:2px,color:#F8FAFC`
+  style OPT1 fill:#065F46,stroke:#10B981,stroke-width:2px,color:#FFFFFF
+  style OPT2 fill:#1E293B,stroke:#3B82F6,stroke-width:1px,color:#F8FAFC
+  style OPT3 fill:#1E293B,stroke:#64748B,stroke-width:1px,color:#94A3B8`
           },
-          technicalDetails: 'Key Environment Variables for n8n Initialization:\n- `N8N_ENCRYPTION_KEY`: A 32+ character cryptographic secret string used to encrypt API tokens and passwords in the database at rest with AES-256-GCM. If this key is lost, stored credentials CANNOT be recovered.\n- `N8N_PORT`: Default is `5678`.\n- `N8N_LISTEN_ADDRESS`: Set to `127.0.0.1` in development to ensure external network interfaces cannot access your canvas.\n- `WEBHOOK_URL`: The public root URL (e.g. `https://automation.yourdomain.com/`) that external webhooks use to reach your instance.\n- `EXECUTIONS_DATA_PRUNE`: Set to `true` in production to prevent SQLite or PostgreSQL from growing to hundreds of gigabytes over time.',
+          technicalDetails: 'Key Interface Landmarks in n8n:\n- Top Bar: Contains your workflow name, the "Active" toggle switch, and the orange "Test workflow" button.\n- Canvas: The large grid in the center where you place and connect your nodes.\n- Add Node Menu: Opened by clicking the "+" button on the canvas or pressing the Tab key.\n- Left Sidebar: Lets you switch between Workflows, Execution history, Credentials, and Settings.',
+          optionalAdvancedDetails: {
+            title: 'For Developers: Running n8n Locally with Docker',
+            content: 'If you already know Docker, you can run:\n`docker run -it --rm --name n8n -p 5678:5678 -v ~/.n8n:/home/node/.n8n docker.n8n.io/n8nio/n8n`\nThis mounts your local `~/.n8n` directory to ensure your workflows and credentials persist across container restarts. Never expose port 5678 to the public internet without an SSL reverse proxy.'
+          },
           workedExample: {
-            scenario: 'Creating a production-grade local Docker Compose file for development.',
+            scenario: 'Navigating to your n8n workspace for the first time.',
             inputJson: {
-              "service": "n8n-dev",
-              "volumePath": "./n8n_data",
-              "port": 5678,
-              "encryptionKeyProvided": true
+              "platform": "n8n Cloud or Localhost",
+              "workspaceUrl": "http://localhost:5678"
             },
-            transformationLogic: 'Translate configuration requirements into a robust docker-compose.yml definition with healthchecks and restart policies.',
+            transformationLogic: 'Log in and land on the blank canvas ready to create your first workflow.',
             outputJson: {
-              "version": "3.8",
-              "services": {
-                "n8n": {
-                  "image": "docker.n8n.io/n8nio/n8n:latest",
-                  "restart": "unless-stopped",
-                  "ports": ["127.0.0.1:5678:5678"],
-                  "environment": {
-                    "N8N_ENCRYPTION_KEY": "YOUR_DEFINED_HEX_ENCRYPTION_SECRET_32_CHARS",
-                    "N8N_HOST": "localhost",
-                    "N8N_PORT": "5678",
-                    "N8N_PROTOCOL": "http",
-                    "NODE_ENV": "production",
-                    "EXECUTIONS_DATA_PRUNE": "true",
-                    "EXECUTIONS_DATA_MAX_AGE": "168"
-                  },
-                  "volumes": ["./n8n_data:/home/node/.n8n"]
-                }
-              }
+              "status": "Ready",
+              "canvasEmpty": true,
+              "readyForFirstStep": true
             },
-            explanation: 'Notice how the ports line binds to `127.0.0.1:5678:5678`. This blocks any unauthorized user on your local WiFi network from accessing your n8n canvas.'
+            explanation: 'When you first open n8n, you see an inviting, empty canvas with a "+" button in the center labeled "Add first step".'
           },
           stepByStepLab: {
-            title: 'Launching a Resilient Local Docker Instance',
-            goal: 'Launch an official n8n Docker container with persistent storage and a custom encryption key on your workstation.',
+            title: 'Opening Your n8n Canvas for the Very First Time',
+            goal: 'Launch n8n in your web browser and create a blank workflow canvas.',
             steps: [
               {
                 stepNumber: 1,
-                title: 'Create Project Directory and Volume Folder',
-                instruction: 'Open your terminal and run:\n```bash\nmkdir -p ~/n8n-local/n8n_data\ncd ~/n8n-local\n```'
+                title: 'Open your n8n Workspace',
+                instruction: 'Either open your n8n Cloud account in your browser, or open a terminal and type: npx n8n. Then navigate to http://localhost:5678 in Google Chrome.',
+                tip: 'If using Chrome, bookmark the page so you can return to it easily.'
               },
               {
                 stepNumber: 2,
-                title: 'Generate a Cryptographic Encryption Key',
-                instruction: 'Generate a secure 64-character random string:\n```bash\nopenssl rand -hex 32\n```\nCopy this value. You will supply it as your N8N_ENCRYPTION_KEY.'
+                title: 'Set up your Owner Account',
+                instruction: 'If this is your first time opening n8n, enter your name, email, and choose a secure password. Click "Next".',
+                tip: 'This password is stored safely in your instance and protects your workflows.'
               },
               {
                 stepNumber: 3,
-                title: 'Create docker-compose.yml',
-                instruction: 'Create `docker-compose.yml` and paste the configuration. Ensure `./n8n_data` is mounted to `/home/node/.n8n`.'
-              },
-              {
-                stepNumber: 4,
-                title: 'Start the Container',
-                instruction: 'Run `docker compose up -d` and inspect the logs using `docker compose logs -f n8n`. When you see "Editor is now accessible via: http://localhost:5678", open it in your browser and complete the initial owner account setup.'
+                title: 'Create a Blank Workflow',
+                instruction: 'Click the "+ Add workflow" button in the top right corner. You will now see a clean canvas with a "+" in the middle.',
+                tip: 'Double-click the default title "My workflow" at the top to give it a friendly name, such as "First Experiment".'
               }
             ],
-            expectedResult: 'You see the n8n visual canvas at http://localhost:5678 with persistent storage mapped to your local disk.'
+            expectedResult: 'You are looking at an empty n8n canvas with a "+" button in the center ready for your first node.'
+          },
+          whatShouldISee: {
+            summary: 'Your browser displays the n8n visual editor grid.',
+            indicators: [
+              'The top bar displays your workflow title and a "+ Add first step" button in the center.',
+              'The left sidebar shows icons for Workflows, Executions, and Credentials.',
+              'No error alerts or warnings are visible on screen.'
+            ]
           },
           commonMistakes: [
             {
-              mistake: 'Running `docker run -d -p 5678:5678 n8nio/n8n` without a volume mount `-v`.',
-              consequence: 'All workflows, executions, and configured credentials are lost whenever the container stops or is updated.',
-              correction: 'Always provide a persistent volume: `-v n8n_data:/home/node/.n8n` or use docker-compose.'
-            },
-            {
-              mistake: 'Failing to back up `N8N_ENCRYPTION_KEY`.',
-              consequence: 'If you move your database to another server without the original key, n8n will fail to decrypt your credentials, rendering every credential useless.',
-              correction: 'Store your `N8N_ENCRYPTION_KEY` in a secure password manager or enterprise vault.'
+              mistake: 'Closing the terminal window if running `npx n8n` locally.',
+              consequence: 'The n8n server process stops and the browser tab displays "Cannot connect to server".',
+              correction: 'Keep the terminal window open in the background while building your workflows locally.'
             }
           ],
           knowledgeCheck: [
             {
-              id: 'q1-1',
-              question: 'What happens if you deploy n8n in Docker without mounting a persistent volume to `/home/node/.n8n`?',
+              id: 'q0-2-1',
+              question: 'Do you need to install Docker or manage servers to start learning n8n?',
               options: [
-                'n8n automatically uploads your data to the n8n Cloud.',
-                'The instance will work while running, but all workflows and credentials will be permanently erased if the container is recreated or upgraded.',
-                'Docker will refuse to start.',
-                'n8n will prompt you for an S3 bucket.'
+                'Yes, n8n cannot run without complex server administration.',
+                'No, you can start immediately with n8n Cloud or a simple local command.',
+                'Yes, you must write a backend in C++ first.',
+                'No, but you must buy specialized hardware.'
               ],
               correctIndex: 1,
-              explanation: 'Docker containers are ephemeral by design. Without an explicit bind-mount or Docker volume mapped to `/home/node/.n8n`, container recreation wipes out the SQLite database file and local config.'
-            },
-            {
-              id: 'q1-2',
-              question: 'Why is `127.0.0.1:5678:5678` safer than `0.0.0.0:5678:5678` during local development?',
-              options: [
-                'It runs faster because of local caching.',
-                'It limits network packet reception exclusively to the loopback interface of your local machine, preventing devices on the same LAN or WiFi from reaching your canvas.',
-                'It automatically provides an SSL certificate.',
-                'It enables Python task runners in n8n.'
-              ],
-              correctIndex: 1,
-              explanation: 'Binding to `127.0.0.1` guarantees that only processes running on the exact same physical machine can connect, protecting your sensitive workflow credentials from other devices on the same network.'
+              explanation: 'n8n Cloud lets anyone start directly inside a normal web browser in 60 seconds with zero installation required.'
             }
           ],
           practicalChallenge: {
-            prompt: 'Draft an operational runbook for backing up your local n8n instance. What files need to be copied? How can you export all workflows and credentials using the n8n CLI?',
-            hints: [
-              'Check the `n8n export:workflows` and `n8n export:credentials` CLI commands in the official documentation.',
-              'Remember that credentials require `--decrypted` to be human-readable or transferable across instances with different encryption keys.'
-            ],
-            solutionNotes: 'A complete backup strategy includes (1) copying the entire `n8n_data` directory while the container is paused, (2) storing the `N8N_ENCRYPTION_KEY`, and (3) using `docker exec -u node <container_id> n8n export:workflows --all --output=/home/node/.n8n/workflows_backup.json`.'
+            prompt: 'Open your n8n canvas, rename the workflow from "My workflow" to "Hello World Lab", and locate the "+" button in the center of the screen.',
+            hints: ['Click directly on the text "My workflow" at the top left of the screen to edit it.'],
+            solutionNotes: 'Once renamed, click outside the text box or press Enter to save your new workflow title.'
           },
           keyTakeaways: [
-            'Docker Compose with persistent volumes is the industry gold standard for running n8n development environments.',
-            'Never leave `N8N_ENCRYPTION_KEY` unset or unbacked; it is the cryptographic root of trust for all credentials in your database.',
-            'Keep development instances bound to localhost (`127.0.0.1`) until you configure an HTTPS reverse proxy with valid TLS certificates.'
+            'n8n Cloud is the fastest, zero-friction way for beginners to start.',
+            'Local development with `npx n8n` is free and runs directly on your computer.',
+            'Advanced Docker self-hosting is an optional track that you can learn later when you are ready.'
           ],
           officialDocLinks: [
             {
-              title: 'Official n8n Docker Hosting Guide',
-              url: 'https://docs.n8n.io/hosting/installation/docker/',
-              note: 'Recommended Docker Compose configuration and volume setup.'
+              title: 'Official n8n Cloud Quickstart',
+              url: 'https://docs.n8n.io/getting-started/quickstarts/cloud/',
+              note: 'Official guide to launching your first cloud workspace.'
+            }
+          ]
+        },
+        {
+          id: 'lesson-0-3',
+          moduleId: 'module-0',
+          stageId: 'stage-0',
+          title: 'Project: Your First Automatic Message',
+          subtitle: 'Connect 3 simple blocks: Manual Start ──► Set Message ──► See Result',
+          difficulty: 'Beginner',
+          estimatedMinutes: 30,
+          prerequisites: ['Lesson 0-1', 'Lesson 0-2'],
+          whyDoINeedThis: 'The fastest way to build confidence is to create something real that works. In this 5-minute project, you will place your first two nodes, connect them with an arrow, run a test, and see live results with your own eyes.',
+          relatableProblem: 'When people look at an empty software canvas for the first time, they often worry about clicking the wrong button or accidentally breaking something. By building a safe, self-contained test that does not send real emails or touch external accounts, you learn the exact mechanics of n8n in complete safety.',
+          firstPrinciplesExplanation: 'Every workflow in n8n needs at least two things:\n1. A way to start (The Trigger).\n2. Something to do (The Action).\n\nIn this first project, we will build the simplest possible working automation:\n- Step 1 (Trigger): We use a special node called "When clicking \'Test workflow\'". This is a manual trigger. It doesn\'t wait for a customer or a clock—it runs only when YOU explicitly press the button.\n- Step 2 (Action): We connect a node called "Edit Fields (Set)". This node creates a custom piece of information—in our case, a friendly message: "Hello, n8n!".\n- Step 3 (The Result): When we run the workflow, data flows out of the trigger, enters the Edit Fields node, and displays our message in the Output panel on the right side of the screen!\n\nNotice the magic: You didn\'t write code, you didn\'t install complex packages, and you didn\'t configure servers. You connected two visual blocks and watched them execute in milliseconds.',
+          visualExplanation: {
+            diagramType: 'mermaid',
+            caption: 'Your Very First n8n Workflow (3 Simple Steps)',
+            mermaidCode: `graph LR
+    T["1. When clicking 'Test workflow'<br/>(Manual Trigger)"] -->|Data Flows Right| S["2. Edit Fields (Set)<br/>message = 'Hello, n8n!'"]
+    S -->|Inspect Result| O["3. Output Pane<br/>✓ Status: Success!"]
+
+    style T fill:#0F172A,stroke:#3B82F6,stroke-width:2px,color:#FFFFFF
+    style S fill:#0F172A,stroke:#10B981,stroke-width:2px,color:#FFFFFF
+    style O fill:#065F46,stroke:#10B981,stroke-width:2px,color:#FFFFFF`
+          },
+          technicalDetails: 'The Anatomy of a Node on the Canvas:\n- Left Circle (Input Pin): Where information enters from the previous step.\n- Right Circle (Output Pin): Where the processed result exits.\n- The Connecting Line: The arrow that directs data flow from left to right.\n- Double-Clicking a Node: Opens its settings modal where you enter values.',
+          workedExample: {
+            scenario: 'Creating a test message and inspecting the resulting output.',
+            inputJson: {},
+            transformationLogic: 'Create a new text field named "greeting" with the value "Hello, n8n! My first automation is working."',
+            outputJson: {
+              "greeting": "Hello, n8n! My first automation is working.",
+              "created_by": "Future Automation Architect",
+              "status": "Success ✓"
+            },
+            explanation: 'The Edit Fields node packages your text into clean, structured data that any downstream node can read.'
+          },
+          stepByStepLab: {
+            title: 'Building Your Very First Working Automation',
+            goal: 'Place a Manual Trigger, connect an Edit Fields node, and execute your first successful test.',
+            steps: [
+              {
+                stepNumber: 1,
+                title: 'Add the Trigger Node',
+                instruction: 'On your blank canvas, click the "+" in the center (or "+ Add first step"). In the search box, type: "When clicking" and select "When clicking \'Test workflow\'".',
+                tip: 'This node creates a manual start button on your canvas.'
+              },
+              {
+                stepNumber: 2,
+                title: 'Add the Action Node',
+                instruction: 'Hover over the right side of your trigger node. Click the small "+" icon on its right output pin. In the search box, type: "Edit Fields" and click on the "Edit Fields (Set)" node.',
+                tip: 'Notice how n8n automatically draws a connected line between the two nodes!'
+              },
+              {
+                stepNumber: 3,
+                title: 'Configure Your Message',
+                instruction: 'In the Edit Fields settings panel that opens on your screen, click the "+ Add Field" button. Choose "String" (which means text). For the Name, type: my_message. For the Value, type: Hello, n8n! My first automation works!',
+                tip: 'In computer terms, "String" simply means plain text like names, sentences, or messages.'
+              },
+              {
+                stepNumber: 4,
+                title: 'Execute Your First Test Run',
+                instruction: 'Click the big orange button labeled "Test step" in the node panel (or click "Test workflow" at the bottom of the canvas). Watch what happens!',
+                tip: 'Look for the bright green checkmark that appears above the node.'
+              },
+              {
+                stepNumber: 5,
+                title: 'Inspect Your Output',
+                instruction: 'Look at the right pane labeled "OUTPUT". You will see your field: my_message: "Hello, n8n! My first automation works!". Congratulations, you just ran your first automation!',
+                tip: 'You can switch between "Schema", "Table", and "JSON" views at the top of the output panel.'
+              }
+            ],
+            expectedResult: 'A two-node workflow connected on the canvas with a green checkmark on both nodes, displaying your custom message in the Output window.'
+          },
+          whatShouldISee: {
+            summary: 'A bright green checkmark appears above both nodes, and your message is displayed in the Output panel.',
+            indicators: [
+              'A green circle with a white checkmark [✓] appears above the Edit Fields node.',
+              'The Output panel on the right displays: my_message: "Hello, n8n! My first automation works!"',
+              'The bottom canvas bar displays: "Workflow executed successfully".'
+            ]
+          },
+          commonMistakes: [
+            {
+              mistake: 'Leaving the field name blank in Edit Fields.',
+              consequence: 'n8n shows a red warning border because every piece of information needs a label.',
+              correction: 'Always give your field a short, descriptive name (like "message", "customer_name", or "status").'
             },
             {
-              title: 'n8n Environment Variables Reference',
-              url: 'https://docs.n8n.io/hosting/configuration/environment-variables/',
-              note: 'Complete listing of all security, networking, and execution configuration options.'
+              mistake: 'Clicking outside the node before clicking "Test step".',
+              consequence: 'The output panel remains empty because the node hasn\'t executed yet.',
+              correction: 'Simply double-click the node to reopen its settings and click the orange "Test step" button.'
+            }
+          ],
+          knowledgeCheck: [
+            {
+              id: 'q0-3-1',
+              question: 'Which direction does information flow between nodes in an n8n workflow?',
+              options: [
+                'From bottom to top.',
+                'From left to right along the connected arrows.',
+                'From right to left.',
+                'In random circles.'
+              ],
+              correctIndex: 1,
+              explanation: 'In n8n, workflows always flow from left to right. Information exits the right pin of one node and enters the left pin of the next.'
+            },
+            {
+              id: 'q0-3-2',
+              question: 'What does a bright green checkmark above a node mean?',
+              options: [
+                'The node has an error and stopped working.',
+                'The node executed successfully and produced output data.',
+                'The node is deleted.',
+                'The node requires a credit card payment.'
+              ],
+              correctIndex: 1,
+              explanation: 'A green checkmark indicates that the step ran smoothly without any errors and is ready for downstream nodes.'
+            }
+          ],
+          practicalChallenge: {
+            prompt: 'In your Edit Fields node, add a second field! Click "+ Add Field", choose "Number", name it "my_score", and give it the value 100. Test the step again and confirm both fields appear in the output.',
+            hints: ['Make sure to select "Number" instead of "String" when adding the second value.'],
+            solutionNotes: 'When you test the step, your Output pane will now show both `my_message` (text) and `my_score: 100` (number) neatly grouped together.'
+          },
+          keyTakeaways: [
+            'Building in n8n is as simple as adding nodes and connecting their pins with arrows.',
+            'The Manual Trigger lets you test and experiment safely without affecting real apps.',
+            'The Edit Fields node is how you create, rename, and organize data in a workflow.',
+            'The Output panel on the right always shows you the exact result produced by the step.'
+          ],
+          officialDocLinks: [
+            {
+              title: 'Official n8n Node Anatomy Guide',
+              url: 'https://docs.n8n.io/workflows/nodes/',
+              note: 'Detailed reference on node pins, inputs, and output panels.'
             }
           ]
         }

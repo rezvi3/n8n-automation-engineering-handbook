@@ -5,7 +5,7 @@ export const stage2: Stage = {
   number: 2,
   title: 'Integrations and Practical Automation',
   subtitle: 'APIs, Webhooks, Credentials, Databases & Messaging',
-  description: 'Connect third-party platforms, master the generic HTTP Request node, secure event-driven webhooks with HMAC signatures, schedule recurring workflows, and synchronize databases.',
+  description: 'Connect external apps safely, talk to any service on the web with the universal HTTP Request node, capture instant real-time events with webhooks, schedule automatic alarm clocks, and sync spreadsheets and databases without duplicates.',
   badge: 'Stage 2 • Integrations',
   accentColor: '#3B82F6',
   modules: [
@@ -14,8 +14,8 @@ export const stage2: Stage = {
       number: 7,
       stageId: 'stage-2',
       title: 'Connecting Applications and Credentials',
-      subtitle: 'OAuth2, API Keys, Scopes, and Secrets Management',
-      description: 'Master authentication mechanisms in n8n. Learn how OAuth2 handshakes work, how to manage Bearer tokens, enforce least-privilege access, rotate API secrets, and diagnose expired token failures.',
+      subtitle: 'Hotel Keycards, Permissions, and Keeping Your Secrets Safe',
+      description: 'Connect external services (Google, Slack, Stripe, Airtable) to n8n safely. Understand how credentials work like hotel keycards, why n8n keeps secrets separate from workflow code, and how to grant just enough access without leaking passwords.',
       difficulty: 'Intermediate',
       estimatedMinutes: 55,
       lessons: [
@@ -23,56 +23,87 @@ export const stage2: Stage = {
           id: 'lesson-7-1',
           moduleId: 'module-7',
           stageId: 'stage-2',
-          title: 'Authentication Architectures & Credential Security',
-          subtitle: 'From API keys to OAuth2 authorization code flows',
+          title: 'Authentication & Credential Security Made Simple',
+          subtitle: 'From API keys to OAuth2 authorization without the confusion',
           difficulty: 'Intermediate',
           estimatedMinutes: 55,
           prerequisites: ['Module 1', 'Module 2'],
+          whyDoINeedThis: 'To let n8n read emails, post Slack updates, or update spreadsheets, you need to give n8n permission to log in on your behalf without handing over your personal password. Learning credentials lets you connect any app safely in 2 minutes.',
+          whatShouldISee: {
+            summary: 'In n8n\'s left sidebar under "Credentials", your connected account displays a green "Connected" badge with a padlock icon.',
+            indicators: [
+              'A green "Connected" status appears next to your account name in Credentials.',
+              'Inside the node modal, the credential dropdown selects your account without red warning banners.',
+              'Clicking "Test Connection" returns a success notification.'
+            ]
+          },
           whyItMatters: 'To automate business platforms (HubSpot, Stripe, Google Workspace, GitHub), n8n must act on your behalf. If you configure credentials incorrectly—such as requesting full admin scopes for a read-only script, or hardcoding an API key into a plain text expression—you create critical security vulnerabilities. Understanding credential models protects your business and client data.',
-          relatableProblem: 'A freelancer connects a client\'s Google Drive using OAuth, but leaves the default n8n encryption key unconfigured. Six months later, the server is migrated, the encryption key breaks, and 40 active client workflows fail simultaneously because none of the Google OAuth tokens can be decrypted. Understanding credential architecture prevents production collapse.',
-          firstPrinciplesExplanation: 'n8n isolates credentials from workflow logic. Workflows define *what* to do; Credentials define *how to authenticate*. This allows you to share or export workflows without exposing private API keys.\n\nThe 3 Core Authentication Patterns:\n1. API Keys & Bearer Tokens: A static secret string provided by the service (e.g. `sk_live_...`). Sent in the HTTP headers (e.g. `Authorization: Bearer <TOKEN>`) or query parameters.\n2. Basic Authentication: Standard HTTP auth using base64-encoded `username:password`.\n3. OAuth 2.0 (Authorization Code Flow): The modern standard for human user accounts (Google, Slack, Salesforce). Instead of sharing your master password with n8n, you authorize n8n via a consent screen. The service issues an Access Token (short-lived, e.g. 1 hour) and a Refresh Token (long-lived). n8n automatically handles refreshing the expired access token in the background without interrupting workflows.\n\nPrinciple of Least Privilege:\nAlways restrict credential scopes. If a workflow only needs to read spreadsheet rows, grant `drive.readonly` or `spreadsheets.readonly`, never full drive administration access.',
+          relatableProblem: 'Imagine you hire a dog walker. You wouldn\'t give them the master deed to your house or your banking PIN—you give them a physical house key that only unlocks the front door between 1:00 PM and 3:00 PM. In software, if a freelancer hardcodes their client\'s master password into a workflow and shares the workflow JSON file online, anyone who downloads the file now owns the client\'s entire account! n8n\'s Credential Store completely prevents this by locking passwords in a separate encrypted vault.',
+          firstPrinciplesExplanation: `Let's break down how n8n connects to other apps in three clear levels:
+
+LEVEL 1: THE HOTEL KEYCARD ANALOGY
+When you check into a hotel, the front desk does not give you the keys to the master safe, the manager's office, or every guest room. 
+Instead, they issue a plastic keycard programmed with very specific permissions:
+1. It unlocks only room 304 and the hotel gym.
+2. It stops working automatically at 11:00 AM on Sunday when you check out.
+
+In n8n, a Credential is that hotel keycard:
+- When you connect Google Sheets, Google doesn't give n8n your Gmail password. Google gives n8n a digital keycard (called a "Token") that says: "This keycard can only edit spreadsheets, and nothing else."
+- If someone steals that token, they cannot access your emails, credit cards, or personal files.
+
+LEVEL 2: HOW N8N SEPARATES CODE FROM SECRETS
+n8n uses a brilliant safety design:
+- WORKFLOW CANVAS: Contains the instructions ("When a form arrives, send an email"). This is public logic. You can export it, share it with teammates, or post it on GitHub.
+- CREDENTIAL VAULT: A separate, encrypted safe inside n8n. It holds the secret passwords, API keys, and tokens.
+- THE CONNECTION: The node on the canvas simply says: "Use Keycard #3 from the vault." The actual password NEVER appears on the canvas or in the workflow code!
+
+LEVEL 3: THE TWO COMMON TYPES OF KEYS YOU WILL SEE
+1. API Key (Static Key): A secret password string provided by a service (for example: \`sk_test_51Abc...\`). You paste it once into n8n's Credential Store, and n8n sends it securely behind the scenes.
+2. OAuth 2.0 (Sign in with Google / Slack): You click a friendly button that says "Sign in with Google". Google asks: "Do you want to allow n8n to view your spreadsheets?" You click "Allow". Google and n8n exchange digital keycards automatically. You never even have to copy and paste a password!`,
           visualExplanation: {
             diagramType: 'mermaid',
-            caption: 'The OAuth 2.0 Token Refresh Flow Inside n8n',
-            mermaidCode: `sequenceDiagram
-  autonumber
-  participant N8N as n8n Execution Engine
-  participant VAULT as Encrypted Credential Vault (AES-256)
-  participant API as External Service (Google / HubSpot)
+            caption: 'How n8n Separates Workflow Logic from Secret Credentials',
+            mermaidCode: `graph TD
+  subgraph PublicCanvas["Workflow Canvas (Safe to Share)"]
+    N1["Node: Google Sheets<br/>'Append Row'"]
+    N1 -.->|References by ID| CRED["Credential Pointer:<br/>'Google Account #2'"]
+  end
 
-  N8N->>VAULT: Fetch Credentials for Node
-  VAULT-->>N8N: Decrypt Access Token & Refresh Token
-  N8N->>API: HTTP Request with Header Authorization: Bearer {Token}
-  alt Token is Valid
-    API-->>N8N: HTTP 200 OK (Data Payload)
-  else Token Expired (HTTP 401 Unauthorized)
-    API-->>N8N: HTTP 401 Token Expired
-    N8N->>API: POST /oauth/token (Exchange Refresh Token)
-    API-->>N8N: Issue New Access Token
-    N8N->>VAULT: Re-encrypt and Save New Access Token
-    N8N->>API: Retry Original HTTP Request with New Token
-    API-->>N8N: HTTP 200 OK (Data Payload)
-  end`
+  subgraph SecureVault["Encrypted Credential Vault (Never Leaves Server)"]
+    CRED --> VAULT["Encrypted Vault (AES-256)<br/>Holds Secret Access Token & Refresh Token"]
+  end
+
+  subgraph RemoteService["External Cloud Platform (Google)"]
+    VAULT -->|Secured HTTPS Request with Token| API["Google API Server<br/>Verifies Token & Allows Action"]
+  end
+
+  style PublicCanvas fill:#0F172A,stroke:#3B82F6,stroke-width:2px,color:#F8FAFC
+  style SecureVault fill:#0F172A,stroke:#10B981,stroke-width:2px,color:#F8FAFC
+  style RemoteService fill:#1E293B,stroke:#94A3B8,stroke-width:1px,color:#F8FAFC`
           },
-          technicalDetails: 'Credential Storage in n8n:\n- Encrypted at Rest: All stored credential records in the database have their secret fields encrypted with AES-256-GCM using `N8N_ENCRYPTION_KEY`.\n- Credential Sharing: In n8n Enterprise/Team plans, credentials can be shared across project workspaces with role-based access control (Admin, Member, Viewer).\n- Testing Connections: The credential modal includes a "Test Connection" button that makes a lightweight diagnostic probe request to verify validity before you wire the node.',
+          technicalDetails: 'Key Security Rules for Automation Engineers:\n- Least Privilege: Never request full admin access if a workflow only needs to read data. Choose "read-only" scopes whenever available.\n- Environment Encryption: n8n automatically encrypts all saved credential values using an internal encryption key stored in the server configuration.\n- Test Connection Button: Inside any credential modal in n8n, click "Test Connection" to immediately verify whether your token is active before running workflows.',
+          optionalAdvancedDetails: {
+            title: 'OAuth 2.0 Token Refresh Handshake & AES-256 Encryption',
+            content: 'DEEP DIVE: OAuth 2.0 Token Refresh Handshake\nWhen you log in via OAuth 2.0, the external service returns two tokens:\n1. Access Token: Short-lived (typically expires after 60 minutes for security). Used on every HTTP request header: `Authorization: Bearer <TOKEN>`.\n2. Refresh Token: Long-lived (valid for months or indefinitely).\n\nWhen the 60 minutes expire, the external server returns HTTP 401 Unauthorized. n8n detects this automatically, pauses for 100 milliseconds, sends the Refresh Token to the provider\'s `/oauth/token` endpoint, receives a fresh Access Token, saves it back into its encrypted database, and retries your workflow step—all without any human intervention or interrupted jobs!'
+          },
           workedExample: {
-            scenario: 'Configuring a generic Header Auth credential for a custom internal microservice.',
+            scenario: 'Connecting a custom service securely using Header Auth instead of typing passwords on the canvas.',
             inputJson: {
               "service": "Internal Inventory Service",
               "endpoint": "https://inventory.corp.internal/v1/stock",
               "secretHeader": "X-API-Key",
               "secretValue": "sec_corp_994829103"
             },
-            transformationLogic: 'Store the secret in n8n Credentials -> "Header Auth" rather than typing it in the HTTP Request node parameters.',
+            transformationLogic: 'Store the secret in n8n Credentials -> "Header Auth" rather than typing it into the HTTP Request node parameters.',
             outputJson: {
               "credentialType": "httpHeaderAuth",
               "configuredFields": {
                 "name": "X-API-Key",
                 "value": "••••••••••••••••••••"
               },
-              "status": "Saved and Encrypted with AES-256"
+              "status": "Saved and Encrypted in Vault"
             },
-            explanation: 'By storing `X-API-Key` in the Credential Store, any developer who inspects or exports the workflow JSON will only see `"credentials": { "httpHeaderAuth": { "id": "cred_12" } }`—the secret value is never leaked in the code.'
+            explanation: 'By storing the key in the Credential Store, any developer who inspects or exports the workflow will only see `"credentials": { "httpHeaderAuth": { "id": "cred_12" } }`—the secret key is never leaked.'
           },
           stepByStepLab: {
             title: 'Creating and Testing a Reusable Header Auth Credential',
@@ -81,25 +112,25 @@ export const stage2: Stage = {
               {
                 stepNumber: 1,
                 title: 'Open Credentials Management',
-                instruction: 'In the left sidebar of n8n, click "Credentials", then click "+ Add Credential".'
+                instruction: 'In the left sidebar of n8n, click "Credentials", then click the orange "+ Add Credential" button in the top right corner.'
               },
               {
                 stepNumber: 2,
                 title: 'Select Header Auth',
-                instruction: 'Search for "Header Auth". Set Name: `X-Service-Token`, and Value: `mock_secret_token_12345`. Click "Save".'
+                instruction: 'In the search box, type "Header Auth" and select it. In the "Name" field, type `X-Service-Token`. In the "Value" field, type `mock_secret_token_12345`. Click "Save".'
               },
               {
                 stepNumber: 3,
                 title: 'Attach to an HTTP Request Node',
-                instruction: 'Create a new workflow, add an HTTP Request node. Under Authentication, select "Predefined Credential Type", choose "Header Auth", and select your newly created credential.'
+                instruction: 'Open your workflow canvas and add an "HTTP Request" node. Under "Authentication", click the dropdown and choose "Predefined Credential Type". Select "Header Auth", and choose the credential you just saved.'
               },
               {
                 stepNumber: 4,
                 title: 'Verify Headers',
-                instruction: 'Set the URL to `https://httpbin.org/headers`. Click "Test step". Inspect the response JSON and verify that `X-Service-Token: mock_secret_token_12345` was transmitted securely.'
+                instruction: 'Set the URL field to `https://httpbin.org/headers`. Click "Test step". Look at the response JSON in the right panel: notice how `X-Service-Token: mock_secret_token_12345` was sent securely by n8n behind the scenes!'
               }
             ],
-            expectedResult: 'httpbin.org echoes back the headers confirming n8n injected your encrypted credential.'
+            expectedResult: 'httpbin.org echoes back the request headers, proving n8n injected your encrypted credential without showing it in plain text on the canvas.'
           },
           commonMistakes: [
             {
@@ -147,8 +178,8 @@ export const stage2: Stage = {
       number: 8,
       stageId: 'stage-2',
       title: 'HTTP Requests and APIs',
-      subtitle: 'The Universal Node: REST, Endpoints, Pagination & Retries',
-      description: 'Master the HTTP Request node from first principles. Understand GET, POST, PUT, PATCH, DELETE, query parameters, headers, body formatting, API status codes, pagination, and exponential backoff retries.',
+      subtitle: 'The Universal Node: Talking to Any Service on the Internet',
+      description: 'Master the HTTP Request node from first principles. Understand the restaurant menu analogy, GET vs POST, query parameters, headers, body formatting, API status codes, and pagination.',
       difficulty: 'Intermediate',
       estimatedMinutes: 75,
       lessons: [
@@ -156,87 +187,136 @@ export const stage2: Stage = {
           id: 'lesson-8-1',
           moduleId: 'module-8',
           stageId: 'stage-2',
-          title: 'The HTTP Request Node: The Swiss Army Knife of Automation',
-          subtitle: 'REST architectures, query parameters, pagination, and resilience',
+          title: 'The HTTP Request Node: Your Universal Key to the Internet',
+          subtitle: 'The restaurant waiter analogy, REST APIs, and making your first request',
           difficulty: 'Intermediate',
           estimatedMinutes: 75,
           prerequisites: ['Module 4', 'Module 7'],
+          whyDoINeedThis: 'n8n has hundreds of pre-built app nodes, but thousands of software tools, local databases, and custom company websites have no built-in node. The HTTP Request node is your universal superpower: if a service exists on the internet with an API, you can connect to it using this single node.',
+          whatShouldISee: {
+            summary: 'When you click "Test step" on an HTTP Request node, the node pulses briefly and displays a green checkmark.',
+            indicators: [
+              'A green checkmark appears on the HTTP Request node.',
+              'The output panel fills with live JSON records returned from the website.',
+              'The response header shows HTTP status 200 OK or 201 Created.'
+            ]
+          },
           whyItMatters: 'While n8n has hundreds of pre-built app nodes, 40% of real client work involves niche SaaS platforms, proprietary internal microservices, or bleeding-edge API endpoints that don\'t have a dedicated node. If you master the generic HTTP Request node, you can integrate with literally any service on the internet that has an API.',
-          relatableProblem: 'A client uses an industry-specific ERP called Fishbowl. There is no "Fishbowl" node in n8n. An amateur tells the client n8n can\'t do it. A professional automation architect opens Fishbowl\'s REST API docs, configures an HTTP Request node with custom headers and JSON body parameters, handles pagination, and builds the entire integration in two hours.',
-          firstPrinciplesExplanation: 'An HTTP Request is a standardized electronic letter sent across the internet. It consists of:\n1. HTTP Method (The Verb):\n   - `GET`: Retrieve data without altering server state.\n   - `POST`: Create a new resource or submit a form.\n   - `PUT`: Completely replace an existing resource.\n   - `PATCH`: Partially update specific fields on an existing resource.\n   - `DELETE`: Remove a resource.\n2. URL & Endpoint: The address (`https://api.github.com/repos/owner/repo/issues`).\n3. Headers: Metadata about the request (e.g. `Content-Type: application/json`, `Authorization: Bearer ...`).\n4. Query Parameters: Key-value filters appended to the URL (`?status=open&limit=100`).\n5. Body (Payload): The actual data being transmitted (usually formatted as JSON).\n\nHandling Pagination:\nAPIs rarely return 10,000 records in one call; they return them in "pages" of 25 or 100 with pagination metadata (e.g. `page=1`, `cursor="dXNlcl8xMDI="`, or a `Link` header). The n8n HTTP Request node includes built-in Pagination settings (Offset-based, Cursor-based, or Next-URL-based) to automatically loop and retrieve all pages.',
+          relatableProblem: 'A client hires you to automate their order processing in an industry-specific inventory tool called "Fishbowl". You open n8n and search for "Fishbowl"—nothing appears! An amateur automation builder gives up and says "n8n can\'t do that". A professional automation engineer opens Fishbowl\'s public API documentation, adds an HTTP Request node, pastes the URL, and has the entire order pipeline automated in under an hour.',
+          firstPrinciplesExplanation: `Let's understand how websites talk to each other using an everyday analogy:
+
+LEVEL 1: THE RESTAURANT WAITER AND MENU ANALOGY
+Imagine you visit a restaurant for dinner:
+1. You (The Client): You sit at a table. You are not allowed to walk into the kitchen to grab food from the stove yourself.
+2. The Menu (The API Documentation): It lists exactly what the kitchen can make, what each item is named, and what options you can choose (e.g. "Burger: choose cheese or bacon").
+3. The Waiter (The HTTP Request): You call the waiter over and give your order. The waiter carries your order back to the kitchen.
+4. The Kitchen (The Server): The chefs prepare your dish.
+5. The Plate (The HTTP Response): The waiter walks back and places the food on your table.
+
+In n8n:
+- You are n8n.
+- The Waiter is the "HTTP Request" node.
+- The Kitchen is the external service (like Stripe, Google, or Shopify).
+- The Menu is the service's API documentation.
+- The Plate of food is the JSON data that arrives in n8n's output panel!
+
+LEVEL 2: THE 4 MAIN VERBS (WHAT YOU ASK THE WAITER TO DO)
+Whenever you use the HTTP Request node, you select a "Method" (an action verb):
+- GET ("Bring me the menu or a glass of water"): You are asking to READ data. You do not change anything on the server.
+- POST ("Here is my order ticket, please make this"): You are SENDING new data to be created (like creating a new customer or sending an email).
+- PUT / PATCH ("Please change my side order from fries to salad"): You are UPDATING an existing record.
+- DELETE ("Please clear this dirty plate"): You are REMOVING a record.
+
+LEVEL 3: ANATOMY OF A WEB REQUEST
+Every request has 4 simple parts:
+1. URL (The Address): Where to send the message (e.g. \`https://api.github.com/users/octocat\`).
+2. Method: The verb (\`GET\`, \`POST\`, etc.).
+3. Headers: Meta-notes attached to the envelope (e.g. \`Content-Type: application/json\` which means "I am speaking JSON", and \`Authorization: Bearer ...\` which proves who you are).
+4. Body (Payload): The actual package being sent (used with POST/PATCH, like \`{ "name": "Alice", "email": "alice@example.com" }\`).`,
           visualExplanation: {
             diagramType: 'mermaid',
-            caption: 'The Anatomy of an HTTP Request & Response Cycle in n8n',
+            caption: 'The Complete HTTP Request and Response Cycle in n8n',
             mermaidCode: `graph LR
-  subgraph Request["Outgoing HTTP Request Node"]
-    M["Method: POST"]
-    U["URL: https://api.stripe.com/v1/refunds"]
-    H["Headers: Authorization, Content-Type"]
-    B["Body: { 'charge_id': 'ch_102', 'amount': 4500 }"]
+  subgraph n8nCanvas["n8n Canvas: HTTP Request Node"]
+    REQ["1. Compose Request<br/>• Method: GET or POST<br/>• URL: https://api.service.com<br/>• Headers: Auth Token<br/>• Body: JSON data"]
   end
 
-  subgraph Server["External SaaS Server"]
-    P["API Gateway & Router"]
-    DB[(Production DB)]
+  subgraph Internet["Secure HTTPS Transit"]
+    TRANSIT["Encrypted Web Request (TLS)"]
   end
 
-  subgraph Response["Incoming HTTP Response Payload"]
-    SC["Status Code: 200 OK (or 400/401/429/500)"]
-    RB["JSON Body: { 'id': 're_99', 'status': 'succeeded' }"]
+  subgraph RemoteServer["External Service (e.g. Stripe / Shopify)"]
+    PROCESS["2. Server Kitchen<br/>• Verifies Auth Token<br/>• Looks up or Saves Record<br/>• Formats JSON Result"]
   end
 
-  Request -->|Encrypted HTTPS TLS 1.3| Server
-  Server -->|Processes Logic & Persists| DB
-  Server -->|Returns Structured Parcel| Response
+  subgraph OutputPanel["n8n Output Data Panel"]
+    RESP["3. Response Received<br/>• Status: 200 OK<br/>• Data: Structured JSON Items"]
+  end
 
-  style Request fill:#0F172A,stroke:#3B82F6,stroke-width:2px,color:#F8FAFC
-  style Server fill:#1E293B,stroke:#94A3B8,stroke-width:1px,color:#F8FAFC
-  style Response fill:#0F172A,stroke:#10B981,stroke-width:2px,color:#F8FAFC`
+  REQ --> TRANSIT --> PROCESS --> OutputPanel
+
+  style n8nCanvas fill:#0F172A,stroke:#3B82F6,stroke-width:2px,color:#F8FAFC
+  style Internet fill:#1E293B,stroke:#94A3B8,stroke-width:1px,color:#F8FAFC
+  style RemoteServer fill:#1E293B,stroke:#F59E0B,stroke-width:1px,color:#F8FAFC
+  style OutputPanel fill:#0F172A,stroke:#10B981,stroke-width:2px,color:#F8FAFC`
           },
-          technicalDetails: 'Essential HTTP Request Node Settings:\n- Never Error (Continue On Fail): When enabled under "Options", the node will not halt the workflow if the API returns a 4xx or 5xx error. Instead, it outputs the error response object, allowing your workflow logic to inspect the error and branch cleanly.\n- Retry on Fail: Automatically retries the request up to 3 times with exponential backoff if a temporary network timeout or HTTP 502/503 occurs.\n- Response Format: Defaults to JSON. Can be switched to "File" when downloading PDFs, images, or ZIPs.\n- Pagination Rules: Configure "Pagination" -> Complete when `{{ $response.body.has_more === false }}`.',
+          technicalDetails: 'Essential HTTP Request Node Settings:\n- Never Error (Continue On Fail): When enabled under "Options", if the external server returns an error (like 404 Not Found), the node will NOT crash your workflow. Instead, it outputs the error message so your workflow can handle it gently.\n- Send Query Parameters: Key-value pairs appended to the URL (e.g. `?limit=10&status=active`).\n- Response Format: Defaults to JSON. Switch to "File" if you are downloading a PDF, image, or ZIP file.',
+          optionalAdvancedDetails: {
+            title: 'HTTP Status Codes, Pagination Strategies & Exponential Retries',
+            content: 'DEEP DIVE: Status Codes and Pagination\nStatus Code Quick-Reference:\n- 2xx (Success): `200 OK` (read succeeded), `201 Created` (new item saved).\n- 4xx (Your Mistake): `400 Bad Request` (invalid JSON), `401 Unauthorized` (missing/bad API key), `404 Not Found` (wrong URL), `429 Too Many Requests` (rate limit exceeded).\n- 5xx (Their Server Crashed): `500 Internal Error`, `502 Bad Gateway`.\n\nHandling Pagination:\nWhen an API has 5,000 records, it won\'t send them all at once. It sends them in "pages" of 50 or 100. In n8n\'s HTTP Request node, click "Add Option" -> "Pagination". n8n can automatically loop through all pages using Offset (e.g. `page=1, 2, 3`) or Cursor tokens until all records are retrieved!'
+          },
           workedExample: {
-            scenario: 'Fetching paginated users from a REST API using cursor-based pagination.',
+            scenario: 'Fetching filtered posts for a specific user from a public REST API.',
             inputJson: {
-              "pageSize": 50,
-              "initialCursor": null
+              "targetUserId": 1
             },
-            transformationLogic: 'Configure HTTP Request node to loop while `$response.body.next_cursor` exists, appending all items into a single array.',
+            transformationLogic: 'Configure HTTP Request node to GET https://jsonplaceholder.typicode.com/posts with query parameter userId=1.',
             outputJson: [
-              { "userId": "usr_01", "name": "Elena Rostova", "role": "Engineer" },
-              { "userId": "usr_02", "name": "Kenji Sato", "role": "Architect" }
+              {
+                "userId": 1,
+                "id": 1,
+                "title": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
+                "body": "quia et suscipit suscipit recusandae consequuntur expedita et cum..."
+              },
+              {
+                "userId": 1,
+                "id": 2,
+                "title": "qui est esse",
+                "body": "est rerum tempore vitae sequi sint nihil reprehenderit dolor..."
+              }
             ],
-            explanation: 'The node evaluates the pagination expression on each iteration, automatically passing the cursor into `?starting_after={{ $response.body.next_cursor }}` until all records are collected.'
+            explanation: 'The external server received the filter, queried its database, and returned an array of matching posts directly into n8n as structured items.'
           },
           stepByStepLab: {
-            title: 'Interacting with a Live REST API and Handling Query Parameters',
-            goal: 'Query the public JSONPlaceholder API, filter results, and handle non-200 responses gracefully.',
+            title: 'Your First Live HTTP Request (No Signup or Keys Needed)',
+            goal: 'Query the free public JSONPlaceholder test API and inspect the live data.',
             steps: [
               {
                 stepNumber: 1,
-                title: 'Add an HTTP Request Node',
-                instruction: 'Create a new workflow and add an HTTP Request node. Set Method: `GET`, URL: `https://jsonplaceholder.typicode.com/posts`.'
+                title: 'Add the HTTP Request Node',
+                instruction: 'Create a new blank workflow. Click the "+" button on the canvas and search for "HTTP Request". Click it to add it to your canvas.'
               },
               {
                 stepNumber: 2,
-                title: 'Configure Query Parameters',
-                instruction: 'Under "Send Query Parameters", add parameter `userId` with value `1`. Click "Test step". Notice how it returns only 10 posts belonging to user 1.'
+                title: 'Set Method and URL',
+                instruction: 'Keep Method as `GET`. In the URL box, type or paste: `https://jsonplaceholder.typicode.com/posts`.'
               },
               {
                 stepNumber: 3,
-                title: 'Simulate a POST Request',
-                instruction: 'Change Method to `POST`. Toggle "Send Body" to ON. Body Content Type: `JSON`. Add fields: `title: "n8n Automation Mastery"`, `body: "Automating workflows with HTTP requests"`, `userId: 1`.'
+                title: 'Add a Query Filter',
+                instruction: 'Scroll down to "Send Query Parameters" and toggle it ON. Click "Add Parameter". For Name, type `userId`. For Value, type `1`.'
               },
               {
                 stepNumber: 4,
-                title: 'Test and Inspect',
-                instruction: 'Click Test step. Confirm that the API returns HTTP 201 Created with an assigned `id: 101`.'
+                title: 'Click Test Step and Inspect',
+                instruction: 'Click the orange "Test step" button at the top of the node modal. Watch the right panel fill with 10 real posts written by user 1! You just made your first real API call.'
               }
             ],
-            expectedResult: 'A successful HTTP 201 response containing your created record ID.'
+            expectedResult: 'A list of 10 structured JSON items appears in the output panel, each with an id, title, and body.'
           },
           commonMistakes: [
             {
-              mistake: 'Passing JSON string literals without parsing or forgetting `Content-Type: application/json`.',
+              mistake: 'Passing JSON string literals without selecting "Body Content Type: JSON".',
               consequence: 'The external server rejects the request with HTTP 400 Bad Request or 415 Unsupported Media Type.',
               correction: 'In the HTTP Request node, always select "Body Content Type: JSON" and provide valid key-value pairs or raw JSON.'
             },
@@ -249,7 +329,7 @@ export const stage2: Stage = {
           knowledgeCheck: [
             {
               id: 'q8-1',
-              question: 'Which HTTP status code category represents a client-side error (such as invalid parameters or unauthorized credentials)?',
+              question: 'Which HTTP status code category represents a client-side error (such as an incorrect API key or missing parameter)?',
               options: [
                 '2xx (e.g. 200, 201)',
                 '3xx (e.g. 301, 302)',
@@ -267,7 +347,7 @@ export const stage2: Stage = {
           },
           keyTakeaways: [
             'The HTTP Request node lets you connect to any REST API on earth, with or without a dedicated n8n node.',
-            'Always verify method (GET/POST/PATCH), query parameters, and headers.',
+            'Always verify method (GET to read, POST to create, PATCH to update).',
             'Use built-in Pagination and "Continue on Fail" options for enterprise-grade API reliability.'
           ],
           officialDocLinks: [
@@ -285,8 +365,8 @@ export const stage2: Stage = {
       number: 9,
       stageId: 'stage-2',
       title: 'Webhooks and Event-Driven Automation',
-      subtitle: 'Instant Ingestion, HMAC Verification & Test vs Production URLs',
-      description: 'Master event-driven architectures using Webhooks. Understand Test vs Production webhook URLs, HTTP response modes, HMAC cryptographic signature verification, and duplicate-event handling.',
+      subtitle: 'Instant Ingestion: The Front Doorbell of Automation',
+      description: 'Master event-driven automation using Webhooks. Learn why webhooks are like front doorbells, the difference between Test and Production URLs, how to respond before external timeouts, and duplicate-event handling.',
       difficulty: 'Intermediate',
       estimatedMinutes: 65,
       lessons: [
@@ -294,43 +374,73 @@ export const stage2: Stage = {
           id: 'lesson-9-1',
           moduleId: 'module-9',
           stageId: 'stage-2',
-          title: 'Event-Driven Webhook Engineering',
-          subtitle: 'Test vs Prod URLs, HMAC verification, and sub-second responses',
+          title: 'Webhooks: Instant Real-Time Automation',
+          subtitle: 'The front doorbell analogy, Test vs Prod URLs, and instant responses',
           difficulty: 'Intermediate',
           estimatedMinutes: 65,
           prerequisites: ['Module 3', 'Module 8'],
+          whyDoINeedThis: 'Instead of running a workflow 1,000 times a day just to ask "did anyone buy anything yet?", a webhook lets external services ring your n8n doorbell the instant an event happens. Your workflows run in zero seconds and cost zero wasted server power.',
+          whatShouldISee: {
+            summary: 'In test mode, the Webhook node displays a spinning radar circle saying "Listening for test event...". When an event arrives, it instantly turns green and populates the canvas with customer details.',
+            indicators: [
+              'The Webhook node pulses with an orange radar animation while waiting.',
+              'When the test payload arrives, the radar changes to a solid green checkmark.',
+              'The output panel displays the received headers and body payload fields.'
+            ]
+          },
           whyItMatters: 'Webhooks are the backbone of modern real-time internet automation. When someone buys a course on Stripe, books a meeting on Calendly, or opens an issue on GitHub, a webhook fires immediately. If you do not understand webhook security (verifying HMAC signatures) or latency (responding before timeout), malicious actors can spoof events or external servers will drop your webhook connection.',
-          relatableProblem: 'A SaaS company connects a Stripe payment webhook to n8n. In the workflow, they place a 45-second AI summarization node BEFORE the webhook response is sent. Stripe has a strict 10-second timeout limit. Because n8n did not return HTTP 200 within 10 seconds, Stripe marks the webhook as failed and retries sending it 12 times over the next 24 hours. The customer receives 12 duplicate confirmation emails and 12 welcome bonuses. Understanding webhook response modes completely solves this.',
-          firstPrinciplesExplanation: 'A webhook is a "reverse API": Instead of n8n calling an external server, the external server calls n8n via an HTTP POST request the instant an event occurs.\n\nCRITICAL CONCEPTS:\n1. Test URL vs. Production URL:\n   - The Test URL (`/webhook-test/...`) ONLY listens when an engineer has clicked "Listen for test event" on the canvas. It captures a single event for debugging, then shuts off.\n   - The Production URL (`/webhook/...`) runs 24/7 in the background when the workflow is toggled to ACTIVE. It never shuts off.\n2. Response Modes:\n   - "Immediately": n8n responds with HTTP 200 the instant the payload arrives (under 50ms), and then processes the rest of the workflow asynchronously. This is the recommended pattern for Stripe, Shopify, and GitHub.\n   - "When Last Node Finishes": n8n holds the HTTP connection open until the final node completes and returns dynamic JSON back to the caller.\n   - "Using \'Respond to Webhook\' Node": Gives you granular control over exactly when and what HTTP status/body to return in the middle of a workflow.\n3. HMAC Signature Verification:\n   Anyone who guesses your webhook URL can send fake POST requests. Services like Shopify, GitHub, and Stripe include an HMAC-SHA256 signature header (e.g. `X-Hub-Signature-256`) computed using your shared secret. n8n must verify this signature to guarantee the payload is authentic.',
+          relatableProblem: 'Imagine you order a package from Amazon. You don\'t want to walk out to your driveway every 60 seconds all day asking "Is the delivery truck here yet? No. How about now? No." That would be exhausting and wasteful! Instead, you sit on your couch, and when the delivery driver arrives, they ring your front doorbell: DING-DONG! You only get up when something actually arrived. In automation, polling every minute is checking the driveway; a webhook is the front doorbell.',
+          firstPrinciplesExplanation: `Let's break down webhooks from simple concepts to production engineering:
+
+LEVEL 1: THE FRONT DOORBELL ANALOGY
+A normal API request is you calling an external company: "Hello Google, please give me my spreadsheet."
+A Webhook is the reverse: You give the external company your doorbell address. When something happens in their system (e.g. a customer clicks "Buy" in Stripe), Stripe sends a message to your doorbell address: "DING-DONG! Customer Sarah just paid $50!"
+
+n8n wakes up immediately, processes Sarah's order, and goes back to sleep.
+
+LEVEL 2: THE CRITICAL DIFFERENCE BETWEEN TEST URL AND PRODUCTION URL
+Inside every n8n Webhook node, you will see two URLs:
+1. TEST URL (\`.../webhook-test/...\`):
+   - This is a "practice doorbell".
+   - It ONLY works when you are sitting in n8n and have clicked the button: "Listen for test event".
+   - It captures exactly ONE event so you can inspect the data on your screen, and then it turns off.
+2. PRODUCTION URL (\`.../webhook/...\`):
+   - This is the real, permanently wired doorbell.
+   - It ONLY works when you flip the switch at the top right of the canvas from "Inactive" to "ACTIVE".
+   - Once active, it runs 24 hours a day, 7 days a week in the background.
+
+BEGINNER GOLDEN RULE: When connecting Stripe, Shopify, or a website form for real customers, ALWAYS use the Production URL and make sure your workflow is toggled ACTIVE!
+
+LEVEL 3: RESPONDING TO THE DOORBELL RAPIDLY
+External services like Stripe and Shopify have a strict 10-second rule: If they ring your doorbell and n8n takes longer than 10 seconds to say "Thank you, I got it!", Stripe assumes your server crashed and will retry sending the same order 12 times!
+To prevent duplicate orders, you can set the Webhook node to "Respond Immediately" with a 200 OK receipt in 50 milliseconds, while your workflow continues doing heavy work in the background.`,
           visualExplanation: {
             diagramType: 'mermaid',
-            caption: 'Immediate Webhook Response vs. Deferred Asynchronous Processing',
+            caption: 'Immediate Webhook Acknowledgment vs. Background Processing',
             mermaidCode: `sequenceDiagram
   autonumber
-  participant S as External Service (Shopify)
+  participant S as External App (Stripe / Shopify)
   participant W as n8n Webhook Listener
-  participant R as Respond to Webhook Node
-  participant B as Heavy Async Pipeline (DB, AI, Slack)
+  participant R as Quick Receipt (200 OK)
+  participant B as Background Actions (Email, DB, Slack)
 
-  S->>W: POST /webhook/order-created (Payload + HMAC Header)
-  W->>W: Validate HMAC Signature
-  alt Signature Invalid
-    W-->>S: 401 Unauthorized (Drop Request)
-  else Signature Valid
-    W->>R: Hand off to Responder
-    R-->>S: 200 OK { "received": true } (Response time: 42ms!)
-    Note over S: Shopify marks webhook as SUCCESS.<br/>No timeouts or retries!
-    W->>B: Continue Async Execution
-    B->>B: Query Database, Generate Invoice, Dispatch Slack Notification
-  end`
+  S->>W: POST /webhook/order-created (Sarah paid $50)
+  W->>R: Instant Acknowledgment
+  R-->>S: HTTP 200 OK: 'Order Received' (Takes 40ms!)
+  Note over S: Stripe marks delivery SUCCESS.<br/>No duplicate retries!
+  W->>B: Continue Workflow in Background
+  B->>B: 1. Save to Google Sheets<br/>2. Send Welcome Email<br/>3. Ping Sales Team in Slack`
           },
-          technicalDetails: 'Securing Webhooks with HMAC Verification in n8n:\n- The Webhook node allows you to set "Authentication" to "Header Auth" or use the Crypto node to compute `crypto.createHmac("sha256", secret).update(rawBody).digest("hex")`.\n- Compare the calculated hash against `headers["x-signature"]`. If they do not match, immediately terminate execution with a Stop and Error node.',
+          technicalDetails: 'Webhook Node Core Settings:\n- HTTP Method: Almost always set to `POST` for incoming event payloads.\n- Path: The unique slug for this webhook (e.g. `stripe-checkout` or `contact-form`).\n- Response Mode: Choose "Immediately" for high-volume event webhooks, or "Using Respond to Webhook Node" if you need to return dynamic custom data back to the caller.',
+          optionalAdvancedDetails: {
+            title: 'Securing Webhooks with HMAC Signatures & Test vs Prod Architecture',
+            content: 'DEEP DIVE: Securing Webhooks with HMAC Signatures\nAnyone who guesses your public webhook URL can send fake POST data pretending to be Stripe. To guarantee authenticity, services like Stripe, Shopify, and GitHub send a cryptographic hash in the request header (e.g. `X-Hub-Signature-256` or `Stripe-Signature`). In n8n, you can use the Crypto node or the built-in webhook signature verification setting with your secret webhook signing key to reject any unauthorized requests with HTTP 401 Unauthorized.'
+          },
           workedExample: {
             scenario: 'Processing an incoming lead submission from a website form with immediate acknowledgment.',
             inputJson: {
               "headers": {
                 "host": "automation.company.com",
-                "x-forwarded-for": "198.51.100.24",
                 "content-type": "application/json"
               },
               "body": {
@@ -351,62 +461,62 @@ export const stage2: Stage = {
             explanation: 'The Respond to Webhook node dispatches the ticket acknowledgment immediately so the user\'s browser form submits without delay.'
           },
           stepByStepLab: {
-            title: 'Creating and Testing a Real Webhook Endpoint',
-            goal: 'Set up a Webhook Trigger, test it with curl, and inspect the incoming payload.',
+            title: 'Creating and Testing Your First Live Webhook',
+            goal: 'Set up a Webhook node, put it into listening mode, and send a test payload from your browser or terminal.',
             steps: [
               {
                 stepNumber: 1,
-                title: 'Add a Webhook Trigger Node',
-                instruction: 'Add a Webhook node. Set HTTP Method: `POST`, Path: `test-lead`. Under "Respond", choose "Using \'Respond to Webhook\' Node".'
+                title: 'Add a Webhook Node',
+                instruction: 'Create a new blank workflow. Click "+" and add a "Webhook" node. Keep HTTP Method as `POST`. Set Path to `my-test-lead`.'
               },
               {
                 stepNumber: 2,
-                title: 'Add a Respond to Webhook Node',
-                instruction: 'Connect "Respond to Webhook" to the trigger. Set Response Code: `200`, and Response Body: `JSON` with `{{ JSON.stringify({ success: true, timestamp: $now.toISO() }) }}`.'
+                title: 'Copy the Test URL',
+                instruction: 'In the Webhook node modal, look at the "Webhook URLs" section at the top. Click "Test URL" and click the copy icon to copy it to your clipboard.'
               },
               {
                 stepNumber: 3,
-                title: 'Listen for Test Event',
-                instruction: 'Click "Listen for test event". Copy the Test URL (e.g. `http://localhost:5678/webhook-test/test-lead`).'
+                title: 'Click Listen for Test Event',
+                instruction: 'Click the orange "Listen for test event" button. The node will start displaying a spinning radar icon waiting for an incoming signal.'
               },
               {
                 stepNumber: 4,
-                title: 'Send a Test Payload via Terminal',
-                instruction: 'In your terminal, run:\n```bash\ncurl -X POST http://localhost:5678/webhook-test/test-lead \\\n  -H "Content-Type: application/json" \\\n  -d \'{"leadName": "Julian Gray", "budget": 20000}\'\n```\nInspect n8n: The canvas catches the event and displays the incoming body!'
+                title: 'Trigger the Webhook',
+                instruction: 'Open your terminal (or an API test tool like Postman/Reqbin) and run:\n```bash\ncurl -X POST <PASTE_YOUR_TEST_URL_HERE> \\\n  -H "Content-Type: application/json" \\\n  -d \'{"customerName": "Elena Rostova", "interest": "Automation"}\'\n```\nSwitch back to n8n: The radar turns into a green checkmark, and Elena\'s data is displayed right on the canvas!'
               }
             ],
-            expectedResult: 'The curl command outputs the JSON acknowledgment and n8n displays the received lead record.'
+            expectedResult: 'The curl command outputs "Workflow got started" and n8n displays the received customer data.'
           },
           commonMistakes: [
             {
-              mistake: 'Using the Test Webhook URL in a production third-party integration (e.g. inside Stripe settings).',
-              consequence: 'As soon as the developer closes the n8n browser tab, all incoming webhooks return HTTP 404 Not Found.',
+              mistake: 'Pasting the "Test URL" into a live production third-party service like Stripe or Shopify.',
+              consequence: 'As soon as you close your n8n browser tab, all customer purchases fail with HTTP 404 Not Found!',
               correction: 'Always copy the PRODUCTION webhook URL and toggle the workflow to ACTIVE for live services.'
             }
           ],
           knowledgeCheck: [
             {
               id: 'q9-1',
-              question: 'Why should you use "Respond Immediately" or a "Respond to Webhook" node early in workflows triggered by webhooks from services like Stripe or Shopify?',
+              question: 'Why should you use the Production Webhook URL instead of the Test Webhook URL for live client systems?',
               options: [
-                'Because n8n cannot process more than 1 node without a response.',
-                'Because external webhook senders enforce strict 5-10 second timeout windows; failing to acknowledge receipt promptly causes them to retry repeatedly, resulting in duplicate processing.',
-                'It reduces your AWS electricity bill.',
-                'It encrypts the payload with SSL.'
+                'The Test URL costs $5 per click.',
+                'The Test URL only listens when you have the canvas open and click "Listen for test event"; the Production URL runs 24/7 in the background when the workflow is Active.',
+                'The Production URL only works on weekends.',
+                'There is no difference between them.'
               ],
               correctIndex: 1,
-              explanation: 'External webhook providers require rapid HTTP 2xx acknowledgment (typically within 5 to 10 seconds). Deferring the response while running slow downstream operations causes the sender to trigger retry storms.'
+              explanation: 'Test URLs are temporary listeners for development; Production URLs are permanently active listeners tied to the workflow activation toggle.'
             }
           ],
           practicalChallenge: {
             prompt: 'Design a duplicate prevention (deduplication) layer for webhooks: If Stripe sends the exact same `event_id` twice within 10 minutes, how can your workflow detect and ignore the second delivery?',
-            hints: ['Query a Redis cache or PostgreSQL database using `event_id`. If record exists, stop immediately; else insert and proceed.'],
+            hints: ['Query a database or cache using `event_id`. If record exists, stop immediately; else insert and proceed.'],
             solutionNotes: 'This guarantees idempotency: `event_id` acts as the unique idempotency key.'
           },
           keyTakeaways: [
-            'Test URLs only listen during interactive canvas debugging; Production URLs run 24/7 when the workflow is Active.',
-            'Acknowledge webhooks rapidly to prevent external timeout retries.',
-            'Always verify HMAC signatures when handling sensitive financial or e-commerce webhooks.'
+            'Webhooks are real-time doorbells: external services notify n8n the instant something happens.',
+            'Test URLs only listen during interactive testing; Production URLs run 24/7 when the workflow is Active.',
+            'Acknowledge webhooks rapidly to prevent external services from triggering timeout retries.'
           ],
           officialDocLinks: [
             {
@@ -423,8 +533,8 @@ export const stage2: Stage = {
       number: 10,
       stageId: 'stage-2',
       title: 'Scheduling, Time, and Business Logic',
-      subtitle: 'Cron Syntax, Timezones, and Business Hours Routing',
-      description: 'Master time-based automation. Understand cron expressions, timezone management, avoiding overlapping executions, interval jitter, and building business hours routing rules.',
+      subtitle: 'Automatic Alarm Clocks, Business Hours, and Timezones',
+      description: 'Master time-based automation. Understand how to run workflows on recurring intervals, master cron expressions without math anxiety, set explicit timezones to avoid daylight savings bugs, and route tasks during business hours.',
       difficulty: 'Intermediate',
       estimatedMinutes: 50,
       lessons: [
@@ -432,30 +542,63 @@ export const stage2: Stage = {
           id: 'lesson-10-1',
           moduleId: 'module-10',
           stageId: 'stage-2',
-          title: 'Chronometric Scheduling & Timezone Engineering',
-          subtitle: 'Cron expressions, interval design, and business calendar routing',
+          title: 'Scheduling: Putting Routine Tasks on Autopilot',
+          subtitle: 'The smart alarm clock analogy, friendly presets vs cron expressions',
           difficulty: 'Intermediate',
           estimatedMinutes: 50,
           prerequisites: ['Module 3', 'Module 5'],
+          whyDoINeedThis: 'Businesses run on routine schedules: morning briefings at 8:00 AM, Friday invoice reminders, or weekend notification muting. Mastering scheduling lets you put routine business chores on autopilot 365 days a year without you having to press a single button.',
+          whatShouldISee: {
+            summary: 'When your workflow is toggled to "Active", you will see an "Active" green toggle at the top right of your canvas.',
+            indicators: [
+              'The workflow toggle switch in the top navigation bar shows green "Active".',
+              'The Executions log in the left sidebar records an automatic execution each time the alarm triggers.',
+              'No manual "Test step" click is required—the schedule runs autonomously.'
+            ]
+          },
           whyItMatters: 'Every business runs on a clock: Daily morning reports at 8:00 AM, weekly payroll processing on Fridays at 5:00 PM, monthly invoice reconciliations on the 1st, or routing support tickets differently on weekends. If your automation doesn\'t account for timezones, daylight savings, or overlapping runs, reports will be sent at 3:00 AM or databases will lock under duplicate cron jobs.',
-          relatableProblem: 'A London-based marketing team sets a daily report for "9:00 AM". When Daylight Savings occurs (BST to GMT), the workflow continues firing in UTC, meaning the report now arrives at 10:00 AM during their morning executive standup. Explicit timezone configuration fixes this permanently.',
-          firstPrinciplesExplanation: 'The Schedule Trigger in n8n provides both friendly presets (e.g. "Every Day at 09:00") and standard 5-field cron syntax:\n```text\n┌───────────── minute (0 - 59)\n│ ┌───────────── hour (0 - 23)\n│ │ ┌───────────── day of month (1 - 31)\n│ │ │ ┌───────────── month (1 - 12)\n│ │ │ │ ┌───────────── day of week (0 - 6) (Sunday to Saturday)\n* * * * *\n```\nExamples:\n- `0 9 * * 1-5`: Mon-Fri at 9:00 AM.\n- `*/15 * * * *`: Every 15 minutes.\n- `0 0 1 * *`: First day of every month at midnight.\n\nCRUCIAL TIMEZONE RULE:\nIn Workflow Settings (accessible via the gear icon in the canvas), always set the workflow\'s Timezone explicitly (e.g. `America/New_York` or `Europe/London`). Never rely on the host container\'s default UTC clock for localized business schedules.',
+          relatableProblem: 'A marketing manager sets an alarm on their phone every morning at 7:55 AM so they can manually download the daily sales spreadsheet and email it to the CEO before the 8:00 AM executive meeting. One day, the manager gets a flat tire on the freeway. The report isn\'t sent, and the executive meeting starts in chaos. Replacing the human alarm clock with an n8n Schedule Trigger means the report arrives at 8:00:00 AM every single morning without fail, even if the manager is asleep on a beach.',
+          firstPrinciplesExplanation: `Let's understand automated scheduling in three easy steps:
+
+LEVEL 1: THE SMART ALARM CLOCK ANALOGY
+You already know how an alarm clock works: You set your phone to ring at 7:00 AM on weekdays. You don't have to stay awake all night staring at the clock—your phone watches the time for you and rings when it's time.
+In n8n, the "Schedule Trigger" is that alarm clock. You tell it:
+- "Wake up every hour."
+- "Wake up every morning at 9:00 AM."
+- "Wake up on the 1st day of every month."
+
+When the clock strikes that time, n8n wakes up, runs through your workflow nodes, and goes back to sleep until the next alarm.
+
+LEVEL 2: FRIENDLY PRESETS VS. CRON SYNTAX
+n8n makes scheduling easy with two modes:
+1. Friendly Presets (No coding needed!):
+   - You simply pick from dropdowns: "Trigger Interval: Days", "Hour: 09", "Minute: 00". n8n does all the rest.
+2. Custom Cron Syntax (For exact precision):
+   - When you need complex schedules (like "Every 15 minutes between 9 AM and 5 PM, Monday through Friday"), you use a standard 5-part shorthand code called a "Cron expression".
+
+LEVEL 3: THE GOLDEN TIMEZONE RULE
+Never forget timezones! By default, cloud servers run on UTC (London time with no daylight savings).
+If your office is in New York or Tokyo, and you set a schedule for "9:00 AM" without setting your workflow's timezone, your workflow will fire at 4:00 AM New York time!
+FIX: In n8n, click the gear icon (Workflow Settings) in the top canvas bar, and choose your local timezone (e.g. \`America/New_York\` or \`Asia/Tokyo\`). Now your 9:00 AM schedule will always match your local office clock.`,
           visualExplanation: {
             diagramType: 'mermaid',
-            caption: 'Business Hours Evaluation Logic Flow',
+            caption: 'Business Hours Logic: Checking the Clock Before Alerting the Team',
             mermaidCode: `graph TD
-  START[Schedule Trigger: Every 15 Minutes] --> TZ[Set Timezone: America/New_York]
-  TZ --> CHECK{Is Business Hours?<br/>Mon-Fri, 9am - 5pm}
-  CHECK -->|Yes| REG[Dispatch to Live Slack Channel]
-  CHECK -->|No| QUEUE[Queue Record in 'After-Hours' Table]
-  QUEUE --> DELAY[Notify On-Call Support via PagerDuty If Critical]
+  ALARM["Schedule Trigger: Fires Every 30 Minutes"] --> GETTIME["Get Current Time in New York"]
+  GETTIME --> CHECK{"Is it Business Hours?<br/>(Mon-Fri, 9am - 5pm)"}
+  CHECK -->|YES: Office is Open| LIVE["Post Alert in #sales-live Slack Channel"]
+  CHECK -->|NO: Night or Weekend| DIGEST["Save into 'Morning Digest' Spreadsheet<br/>(Don't wake up the team at 2am!)"]
 
-  style START fill:#0F172A,stroke:#3B82F6,stroke-width:2px,color:#F8FAFC
+  style ALARM fill:#0F172A,stroke:#3B82F6,stroke-width:2px,color:#F8FAFC
   style CHECK fill:#1E293B,stroke:#F59E0B,stroke-width:2px,color:#F8FAFC
-  style REG fill:#0F172A,stroke:#10B981,stroke-width:2px,color:#F8FAFC
-  style QUEUE fill:#0F172A,stroke:#8B5CF6,stroke-width:2px,color:#F8FAFC`
+  style LIVE fill:#0F172A,stroke:#10B981,stroke-width:2px,color:#F8FAFC
+  style DIGEST fill:#0F172A,stroke:#8B5CF6,stroke-width:2px,color:#F8FAFC`
           },
-          technicalDetails: 'Business Hours Expression Formula in n8n:\nTo evaluate if the current execution is within business hours in New York:\n```javascript\n{{ \n  (() => {\n    const now = $now.setZone("America/New_York");\n    const hour = now.hour;\n    const weekday = now.weekday; // 1 = Monday, 7 = Sunday\n    return weekday >= 1 && weekday <= 5 && hour >= 9 && hour < 17;\n  })()\n}}\n```\nReturns `true` during business hours and `false` during nights and weekends.',
+          technicalDetails: 'Standard 5-Field Cron Anatomy:\n```text\n┌───────────── Minute (0 - 59)\n│ ┌───────────── Hour (0 - 23)\n│ │ ┌───────────── Day of month (1 - 31)\n│ │ │ ┌───────────── Month (1 - 12)\n│ │ │ │ ┌───────────── Day of week (0 - 6) (0=Sun, 1=Mon, 5=Fri)\n* * * * *\n```\nCommon Examples:\n- `0 9 * * 1-5`: Mon-Fri at 9:00 AM.\n- `*/15 * * * *`: Every 15 minutes.\n- `0 0 1 * *`: First day of every month at midnight.',
+          optionalAdvancedDetails: {
+            title: 'Luxon Date Math, Timezones & Preventing Overlapping Executions',
+            content: 'DEEP DIVE: Luxon Date Math in n8n Expressions\nn8n has the powerful Luxon library built-in via the `$now` variable:\n- `$now.toISO()` -> `2026-10-26T09:00:00.000Z`\n- `$now.setZone("America/New_York").hour` -> Current hour in New York.\n- `$now.minus({ days: 1 }).toFormat("yyyy-MM-dd")` -> Yesterday\'s date formatted for SQL.\n- `$now.weekday` -> 1 for Monday through 7 for Sunday.\n\nEvaluating Business Hours Expression:\n`{{ $now.setZone("America/New_York").weekday <= 5 && $now.setZone("America/New_York").hour >= 9 && $now.setZone("America/New_York").hour < 17 }}`\nReturns `true` during working hours and `false` during nights and weekends.'
+          },
           workedExample: {
             scenario: 'Generating a dynamic date filter for querying all sales created in the last 24 hours.',
             inputJson: {
@@ -472,37 +615,42 @@ export const stage2: Stage = {
             explanation: 'Using `{{ $now.minus({ days: 1 }).startOf("day").toISO() }}` and `{{ $now.minus({ days: 1 }).endOf("day").toISO() }}`.'
           },
           stepByStepLab: {
-            title: 'Building a Business-Hours Notification Gate',
-            goal: 'Build a workflow that checks the current time and routes to different message channels.',
+            title: 'Building a Scheduled Workflow with Business Hours Branching',
+            goal: 'Set up a recurring schedule that checks whether the office is open or closed.',
             steps: [
               {
                 stepNumber: 1,
                 title: 'Add a Schedule Trigger',
-                instruction: 'Add a Schedule Trigger configured for every 30 minutes.'
+                instruction: 'Create a new workflow and add a "Schedule Trigger". In the "Trigger Interval" dropdown, choose "Days". Set "At Hour" to `9` and "At Minute" to `00`.'
               },
               {
                 stepNumber: 2,
-                title: 'Add an If Node with Time Expression',
-                instruction: 'Connect an If node. In the value field, enter the business hours expression provided in the technical details above. Set Condition: Boolean Equals `true`.'
+                title: 'Add an If Node to Check Weekdays',
+                instruction: 'Connect an "If" node to the trigger. Under Condition, choose "Number". In the first value box, type: `{{ $now.weekday }}`. Set comparison to "Less than or equal to", and second value to `5` (1 to 5 means Monday to Friday).'
               },
               {
                 stepNumber: 3,
-                title: 'Wire the True and False Outputs',
-                instruction: 'On True, connect an Edit Fields node with `channel: "#sales-live"`. On False, connect one with `channel: "#sales-night-digest"`.'
+                title: 'Add Output Actions',
+                instruction: 'On the "True" output, connect an Edit Fields node with `status: "Workday: Sending live alerts!"`. On the "False" output, connect one with `status: "Weekend: Holding messages until Monday."`.'
               },
               {
                 stepNumber: 4,
                 title: 'Test the Node',
-                instruction: 'Click Test step. Confirm that the node correctly branches based on the current time in New York.'
+                instruction: 'Click "Test step" on the If node. Inspect which branch lights up green based on today\'s actual day of the week!'
               }
             ],
-            expectedResult: 'The execution routes cleanly down the appropriate branch according to the clock.'
+            expectedResult: 'The execution routes cleanly down the appropriate branch according to the calendar day.'
           },
           commonMistakes: [
             {
-              mistake: 'Scheduling a heavy batch job every 1 minute when the workflow takes 90 seconds to run.',
-              consequence: 'Runs overlap, leading to CPU saturation, database deadlocks, and container crashes.',
-              correction: 'Increase the interval (e.g. to 5 minutes) or design sub-workflows that acquire a distributed lock.'
+              mistake: 'Leaving the workflow in UTC when the client expects 9:00 AM local time.',
+              consequence: 'Executive morning reports arrive at 4:00 AM or 5:00 AM depending on daylight savings time.',
+              correction: 'Open Workflow Settings (gear icon) and set the workflow\'s Timezone explicitly to your client\'s local city.'
+            },
+            {
+              mistake: 'Scheduling a heavy batch job every 1 minute when the workflow takes 90 seconds to finish.',
+              consequence: 'Runs overlap, leading to high CPU usage, duplicated database entries, and crashes.',
+              correction: 'Increase the interval (e.g. to 5 minutes) so the previous run has ample time to complete.'
             }
           ],
           knowledgeCheck: [
@@ -553,31 +701,64 @@ export const stage2: Stage = {
           id: 'lesson-11-1',
           moduleId: 'module-11',
           stageId: 'stage-2',
-          title: 'Multi-System Integration & Database Synchronization',
-          subtitle: 'Sheets vs Databases, Slack blocks, and atomic upserts',
+          title: 'Spreadsheets, Databases & Alerts: The Core Automation Pipeline',
+          subtitle: 'Whiteboards vs filing cabinets, Slack alerts, and the golden rule of Upsert',
           difficulty: 'Intermediate',
           estimatedMinutes: 70,
           prerequisites: ['Module 6', 'Module 8'],
+          whyDoINeedThis: 'Most real-world freelance and company workflows boil down to: take incoming data from a form or webhook, save it cleanly into a spreadsheet or database, and ping the team in Slack or by email. Mastering this multi-channel loop makes you capable of building 90% of paid automation projects.',
+          whatShouldISee: {
+            summary: 'After running the workflow, open your Google Sheet or database: a new row will be neatly populated with the contact information.',
+            indicators: [
+              'A new record appears in your Google Sheet or SQL table with no duplicate rows.',
+              'A styled alert message arrives in your Slack, Discord, or Email inbox.',
+              'The execution history shows a 100% green run path through all multi-channel nodes.'
+            ]
+          },
           whyItMatters: 'Every business stores data in spreadsheets or databases and communicates via Slack, Discord, or email. The ability to listen to form submissions, look up customer records in a SQL database, perform an idempotent upsert (update if exists, insert if new), append a row to Google Sheets, and dispatch a formatted Slack message is the core skillset of freelance and enterprise automation developers.',
-          relatableProblem: 'A company keeps track of VIP clients in Google Sheets. Whenever an automation runs, it inserts a new row. If a client submits their phone number twice, the sheet gets duplicate entries. Later, the billing department charges the client twice. By changing the operation from a naive "Append" to an "Upsert" based on email, duplicates are permanently prevented.',
-          firstPrinciplesExplanation: 'When integrating multi-channel systems, consider the storage hierarchy:\n\n1. Google Sheets / Airtable: Excellent for non-technical team visibility and simple CRM trackers (< 100,000 rows). Drawback: Slow API rate limits (Google Sheets allows only ~60 read/write requests per user per minute).\n2. Relational Databases (PostgreSQL / MySQL): The industry standard for high-volume, ACID-compliant transactions. Supports millions of rows, sub-millisecond indexed lookups, and atomic `UPSERT` queries (`INSERT ... ON CONFLICT (id) DO UPDATE ...`).\n3. Messaging (Slack / Discord / Telegram): The operational alert layer. Use rich JSON formatting (Slack Block Kit) to provide interactive action buttons (e.g. "Approve Refund", "Reject Lead") directly inside chat channels.\n\nWHAT IS AN UPSERT?\n"Upsert" = UPDATE + INSERT. When synchronizing a customer into a database:\n- If the email does NOT exist -> INSERT a new row.\n- If the email ALREADY exists -> UPDATE the existing row with the new timestamp and metadata.',
+          relatableProblem: 'A company tracks VIP event attendees in Google Sheets. Whenever someone submits a form, an automation appends a new row. If an attendee registers twice to fix a typo in their name, two separate rows are created. The welcome team sends two swag bags, and the billing team charges their credit card twice! By changing the operation from a naive "Append" to an "Upsert" based on email address, duplicates are permanently eliminated.',
+          firstPrinciplesExplanation: `Let's understand how data storage and messaging work together:
+
+LEVEL 1: THE WHITEBOARD VS. THE FIREPROOF FILING CABINET
+- Google Sheets / Airtable (The Whiteboard): Easy for anyone on the team to open, view, sort, and color-code. Perfect for small projects (< 50,000 rows). However, like a physical whiteboard, if 100 people try to write on it simultaneously, they will bump elbows and make a mess (Google Sheets limits you to ~60 requests per minute).
+- PostgreSQL / MySQL Database (The Fireproof Filing Cabinet): A professional database built for heavy industrial workloads. It can store millions of customer records, search through them in milliseconds, and handle thousands of simultaneous writes without breaking.
+- Slack / Discord / Email (The Loudspeaker): Where you alert humans that something important just happened.
+
+LEVEL 2: WHAT IS AN "UPSERT"? (THE GOLDEN RULE OF SYNCING)
+"Upsert" is a combination of two words: UPDATE + INSERT.
+Think of your personal phone address book:
+- If a contact named "Sarah" is NOT in your contacts, your phone creates a brand new contact card (INSERT).
+- If "Sarah" is ALREADY in your contacts, your phone doesn't create a second Sarah—it simply updates her phone number on her existing card (UPDATE).
+
+When n8n syncs customer leads to Google Sheets or PostgreSQL:
+- Always use UPSERT (using email as the unique matching key).
+- That way, if a customer submits the form three times, you only ever have ONE clean, up-to-date row!
+
+LEVEL 3: CONNECTING THE FULL LOOP
+In real business automation, you chain these tools together into a seamless flow:
+1. Trigger: A new lead arrives via Webhook or form.
+2. Store: Perform an Upsert into Google Sheets or PostgreSQL.
+3. Alert: Dispatch a formatted message to Slack with a direct link to the customer record.
+4. Confirm: Send a warm confirmation email to the customer.`,
           visualExplanation: {
             diagramType: 'mermaid',
-            caption: 'Multi-System Lead Ingestion, SQL Upsert, and Alerting Architecture',
+            caption: 'Multi-Channel Pipeline: Ingestion, Database Upsert, and Team Notification',
             mermaidCode: `graph TD
-  IN[New Lead Ingestion: Webhook] --> V[Validate Email & Phone]
-  V --> DB[(PostgreSQL: Upsert Lead Record<br/>ON CONFLICT email DO UPDATE)]
-  DB --> SHEET[Google Sheets: Append Audit Log Row]
-  SHEET --> SLACK[Slack: Post Rich Block Kit Alert<br/>With 'Claim Lead' Button]
-  SLACK --> EMAIL[SendGrid / SMTP: Send Personalized Welcome Email]
+  IN["1. Incoming Lead: Webhook Form"] --> V["2. Validate Email & Name"]
+  V --> DB[("3. Database / Google Sheets:<br/>UPSERT Record<br/>(Update if exists, Insert if new)")]
+  DB --> SLACK["4. Slack / Discord Notification:<br/>Rich Alert Card with Lead Info"]
+  SLACK --> EMAIL["5. Gmail / SendGrid:<br/>Personalized Welcome Email to Customer"]
 
   style IN fill:#0F172A,stroke:#3B82F6,stroke-width:2px,color:#F8FAFC
   style DB fill:#0F172A,stroke:#10B981,stroke-width:2px,color:#F8FAFC
-  style SHEET fill:#1E293B,stroke:#F59E0B,stroke-width:2px,color:#F8FAFC
   style SLACK fill:#1E293B,stroke:#8B5CF6,stroke-width:2px,color:#F8FAFC
   style EMAIL fill:#0F172A,stroke:#EC4899,stroke-width:2px,color:#F8FAFC`
           },
-          technicalDetails: 'SQL Upsert Pattern in n8n:\nIn the Postgres node, choose Operation: "Execute a SQL Query". Always use parameterized expressions to prevent SQL injection:\n```sql\nINSERT INTO leads (email, full_name, budget, status, updated_at)\nVALUES ($1, $2, $3, $4, NOW())\nON CONFLICT (email) \nDO UPDATE SET \n  budget = EXCLUDED.budget,\n  status = EXCLUDED.status,\n  updated_at = NOW()\nRETURNING id, status;\n```\nParameters mapping: `{{ $json.email }}`, `{{ $json.fullName }}`, `{{ $json.budget }}`, `{{ $json.status }}`.',
+          technicalDetails: 'Upsert Configuration in n8n:\n- In Google Sheets Node: Choose Operation: "Append or Update Row" (Upsert). Specify "Column to match on": `Email`.\n- In PostgreSQL Node: Choose Operation: "Execute a SQL Query" with parameterized values ($1, $2) or use the built-in "Upsert" operation.\n- Slack Block Kit: Use structured JSON blocks to render interactive buttons (e.g. "Approve Lead", "Assign to Sales") directly inside Slack messages.',
+          optionalAdvancedDetails: {
+            title: 'Parameterized SQL Queries, SQL Injection Prevention & Atomic Upserts',
+            content: 'DEEP DIVE: Parameterized SQL Queries & Security\nNever concatenate raw text into SQL strings like: `INSERT INTO leads VALUES (\'\' + $json.name + \'\')`. If a malicious user submits their name as `Robert\'); DROP TABLE leads; --`, your entire database table will be deleted (SQL Injection)!\nAlways use parameterized placeholders:\n```sql\nINSERT INTO leads (email, full_name, budget, updated_at)\nVALUES ($1, $2, $3, NOW())\nON CONFLICT (email)\nDO UPDATE SET\n  full_name = EXCLUDED.full_name,\n  budget = EXCLUDED.budget,\n  updated_at = NOW()\nRETURNING id, status;\n```\nParameters mapping: `{{ $json.email }}`, `{{ $json.fullName }}`, `{{ $json.budget }}`.'
+          },
           workedExample: {
             scenario: 'Formatting a Slack notification with Block Kit UI buttons.',
             inputJson: {
@@ -612,37 +793,42 @@ export const stage2: Stage = {
             explanation: 'The Slack node sends this structured payload, rendering an interactive button directly inside the team\'s channel.'
           },
           stepByStepLab: {
-            title: 'Building an Idempotent Multi-Channel Notification Flow',
-            goal: 'Accept a customer lead, format a Slack message, append to a spreadsheet, and send a confirmation email.',
+            title: 'Building a Lead Ingestion and Alert Pipeline',
+            goal: 'Simulate an incoming customer lead, format a Slack alert message, and generate a confirmation email payload.',
             steps: [
               {
                 stepNumber: 1,
                 title: 'Simulate Incoming Lead',
-                instruction: 'Add a Code node that returns: `{ "name": "Alex Mercer", "email": "alex@mercer.dev", "plan": "Enterprise" }`.'
+                instruction: 'Add a Manual Trigger connected to an Edit Fields node with: `name: "Alex Mercer"`, `email: "alex@mercer.dev"`, `company: "Acme Corp"`, `budget: 15000`.'
               },
               {
                 stepNumber: 2,
-                title: 'Add Google Sheets or Mock Storage Node',
-                instruction: 'Add an Edit Fields node simulating a database upsert returning `{ "dbId": 1092, "actionTaken": "INSERTED" }`.'
+                title: 'Simulate Database Upsert',
+                instruction: 'Add an Edit Fields node simulating a database upsert output: `leadId: 1092`, `status: "SAVED_UPSERT"`, `timestamp: {{ $now.toISO() }}`.'
               },
               {
                 stepNumber: 3,
                 title: 'Format Multi-Channel Notifications',
-                instruction: 'Add an Edit Fields node that formats both a Slack message string and an HTML email body using `{{ $json.name }}` and `{{ $json.plan }}`.'
+                instruction: 'Add an Edit Fields node that formats a Slack message string: `🔥 New Lead: {{ $json.name }} from {{ $json.company }} (Budget: ${{ $json.budget }})` and an email subject: `Welcome to the platform, {{ $json.name }}!`.'
               },
               {
                 stepNumber: 4,
                 title: 'Verify Results',
-                instruction: 'Execute the pipeline and inspect the output JSON to verify that personalization values populated cleanly without syntax errors.'
+                instruction: 'Click "Test step" and inspect the output JSON to verify that both personalization fields populated cleanly without syntax errors.'
               }
             ],
-            expectedResult: 'A fully mapped multi-channel payload ready for delivery.'
+            expectedResult: 'A fully mapped multi-channel payload ready for delivery to Slack and email.'
           },
           commonMistakes: [
             {
-              mistake: 'Using unparameterized raw SQL string concatenation like `INSERT INTO users VALUES (\'\' + $json.name + \'\')`.',
-              consequence: 'Severe SQL injection vulnerability that allows attackers to delete or dump your database.',
-              correction: 'Always use parameterized SQL bindings ($1, $2, etc.) or n8n\'s built-in "Insert/Update" UI operations.'
+              mistake: 'Using "Append Row" instead of "Append or Update (Upsert)" for customer syncs.',
+              consequence: 'Duplicate rows build up rapidly whenever customers submit multiple times or when sync workflows re-run.',
+              correction: 'Always configure Upsert with a unique identifier like Email or Customer ID.'
+            },
+            {
+              mistake: 'Using unparameterized raw SQL string concatenation.',
+              consequence: 'Exposes your entire database to catastrophic SQL injection attacks.',
+              correction: 'Always use parameterized SQL bindings ($1, $2, etc.) or n8n\'s built-in UI operations.'
             }
           ],
           knowledgeCheck: [

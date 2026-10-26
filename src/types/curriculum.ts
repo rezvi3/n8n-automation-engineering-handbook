@@ -73,7 +73,7 @@ export interface Lesson {
   difficulty: DifficultyLevel;
   estimatedMinutes: number;
   prerequisites: string[];
-  whyItMatters: string;
+  whyItMatters?: string;
   relatableProblem: string;
   firstPrinciplesExplanation: string;
   visualExplanation: VisualExplanation;
@@ -86,6 +86,15 @@ export interface Lesson {
   practicalChallenge: PracticalChallenge;
   keyTakeaways: string[];
   officialDocLinks: DocLink[];
+  whyDoINeedThis?: string;
+  whatShouldISee?: {
+    summary: string;
+    indicators: string[];
+  };
+  optionalAdvancedDetails?: {
+    title: string;
+    content: string;
+  };
 }
 
 export interface Module {
@@ -154,6 +163,8 @@ export interface GlossaryTerm {
   technicalDefinition: string;
   n8nContext: string;
   relatedTerms: string[];
+  analogy?: string;
+  visualDiagram?: string;
 }
 
 export interface ResourceItem {

@@ -50,7 +50,8 @@ export function searchCurriculum(query: string): Lesson[] {
   return allLessons.filter(l => 
     l.title.toLowerCase().includes(q) ||
     l.subtitle.toLowerCase().includes(q) ||
-    l.whyItMatters.toLowerCase().includes(q) ||
+    (l.whyDoINeedThis && l.whyDoINeedThis.toLowerCase().includes(q)) ||
+    (l.whyItMatters && l.whyItMatters.toLowerCase().includes(q)) ||
     l.technicalDetails.toLowerCase().includes(q) ||
     l.keyTakeaways.some(t => t.toLowerCase().includes(q))
   );

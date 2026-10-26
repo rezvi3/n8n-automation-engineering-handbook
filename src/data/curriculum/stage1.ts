@@ -5,7 +5,7 @@ export const stage1: Stage = {
   number: 1,
   title: 'Core n8n Foundations',
   subtitle: 'The Canvas, Data Flow, JSON & Expression Mastery',
-  description: 'Master the n8n visual editor, the core execution engine, the n8n JSON items contract, paired-item linking, and modern expression syntax.',
+  description: 'Master the visual canvas, understand input/output pins, learn how JSON organizes digital information without confusion, and connect data between nodes using simple drag-and-drop expressions.',
   badge: 'Stage 1 • Core Foundations',
   accentColor: '#10B981',
   modules: [
@@ -14,10 +14,10 @@ export const stage1: Stage = {
       number: 2,
       stageId: 'stage-1',
       title: 'Mastering the n8n Interface',
-      subtitle: 'The Canvas, Node Anatomy, and Execution States',
-      description: 'Navigate the visual canvas, understand input/output connection pins, configure node panels, read execution data, and understand the difference between test runs and active workflows.',
+      subtitle: 'The Canvas, Node Anatomy, and Status Indicators',
+      description: 'Learn how to navigate the visual canvas, understand connection pins, read the three-pane node window, and understand status checkmarks.',
       difficulty: 'Beginner',
-      estimatedMinutes: 50,
+      estimatedMinutes: 35,
       lessons: [
         {
           id: 'lesson-2-1',
@@ -26,133 +26,115 @@ export const stage1: Stage = {
           title: 'The Visual Canvas & Node Anatomy',
           subtitle: 'Understanding pins, execution panels, and state indicators',
           difficulty: 'Beginner',
-          estimatedMinutes: 50,
-          prerequisites: ['Module 0', 'Module 1'],
-          whyItMatters: 'The n8n editor is not just a diagramming tool—it is an interactive debugging IDE. Every node displays its live input and output data directly inside its modal. Mastering the canvas allows you to diagnose data shape issues instantly without jumping between logs and code.',
-          relatableProblem: 'A new user connects two nodes, clicks "Test step", but sees an empty output. They do not realize that in n8n, a node will not produce an output if the preceding node sent 0 items, or if the connection was wired into the secondary (error) output pin. Understanding node pin types and execution states eliminates this frustration.',
-          firstPrinciplesExplanation: 'In n8n, workflows flow from left to right along connection paths between nodes. A node has four essential parts:\n1. Input Pin (Left): Where data enters the node from an upstream node. Most action nodes have one input, but Merge nodes can have multiple.\n2. Output Pin (Right): Where transformed data exits to downstream nodes. Conditional nodes like `If` or `Switch` have multiple output pins representing different branches (e.g. `true` vs `false`).\n3. Node Configuration Modal: Double-clicking any node opens its parameters, credential selectors, and side-by-side data viewer (Input Data on the left, Output Data on the right).\n4. Node Status Indicators: A green checkmark indicates successful execution with output items; a red exclamation mark indicates a runtime error; a grey indicator means the node was skipped because prior branching did not send items to it.\n\nCrucial Distinction: "Test step" executes ONLY that specific node using the cached data from the preceding node. "Test workflow" runs the entire chain from the trigger. "Active workflow" runs in the background 24/7 reacting to external events.',
+          estimatedMinutes: 35,
+          prerequisites: ['Module 0'],
+          whyDoINeedThis: 'The n8n editor is like a visual workbench. Once you know what each circle, button, and color means, you will never feel lost or confused about where your information is going.',
+          relatableProblem: 'A beginner connects two nodes on the screen, clicks "Test step", but the screen stays empty. They wonder: "Did I break it? Is it broken?" Usually, the explanation is simple: they wired into an error pin, or the node was waiting for data that hasn\'t been sent yet. Learning the canvas anatomy prevents this confusion.',
+          firstPrinciplesExplanation: 'In n8n, workflows always flow from left to right along connection lines between nodes.\n\nEvery node on the canvas has 4 essential parts:\n1. Input Pin (The circle on the left): Where data enters the node from the previous step. Think of it like a letter slot on a door.\n2. Output Pin (The circle on the right): Where processed results exit to the next step.\n3. The 3-Pane Node Window: Double-clicking any node opens a window with 3 clear areas:\n   - Left Pane (INPUT): Shows the data arriving from the previous node.\n   - Center Pane (PARAMETERS): Where you choose settings, type messages, or select options.\n   - Right Pane (OUTPUT): Shows the exact result produced by this node after you test it.\n4. Node Status Indicators:\n   - Green Checkmark [✓]: The step executed successfully!\n   - Red Exclamation [!]: Something needs attention (e.g. a missing setting or invalid password).\n   - Grey / Blank: The step has not run yet.',
           visualExplanation: {
             diagramType: 'mermaid',
-            caption: 'Anatomy of an n8n Node and Connection Pins',
+            caption: 'Anatomy of an n8n Node: Input Pin, Parameters, and Output Pin',
             mermaidCode: `graph LR
-  subgraph Upstream["Preceding Node"]
-    U_OUT((Out Pin))
-  end
+    IN((● Input Pin<br/>Data Enters)) --> PARAMS["⚙️ Node Parameters<br/>(Your settings & options)"]
+    PARAMS --> OUT((● Output Pin<br/>Result Exits))
 
-  subgraph CurrentNode["Current Action Node (e.g. Edit Fields)"]
-    direction TB
-    IN_PIN((In Pin)) --> PARAMS["Parameters & Expressions"]
-    PARAMS --> OUT_PIN((Out Pin))
-    PARAMS -.-> ERR_PIN((Error Pin<br/>If 'Continue on Fail'))
-  end
-
-  subgraph Downstream["Success Branch"]
-    D_IN((In Pin))
-  end
-
-  subgraph ErrorHandler["Error Branch"]
-    E_IN((In Pin))
-  end
-
-  U_OUT -->|Array of Items| IN_PIN
-  OUT_PIN -->|Transformed Items| D_IN
-  ERR_PIN -->|Error Object Payload| E_IN
-
-  style CurrentNode fill:#1E293B,stroke:#3B82F6,stroke-width:2px,color:#F8FAFC
-  style Downstream fill:#0F172A,stroke:#10B981,stroke-width:2px,color:#F8FAFC
-  style ErrorHandler fill:#0F172A,stroke:#EF4444,stroke-width:2px,color:#F8FAFC`
+    style IN fill:#3B82F6,stroke:#1D4ED8,stroke-width:2px,color:#FFFFFF
+    style PARAMS fill:#0F172A,stroke:#64748B,stroke-width:2px,color:#FFFFFF
+    style OUT fill:#10B981,stroke:#047857,stroke-width:2px,color:#FFFFFF`
           },
-          technicalDetails: 'Node Modes in n8n:\n- Manual Testing Mode: Executions triggered via the canvas button. Execution logs are stored temporarily with full debug payloads.\n- Active (Production) Mode: The toggle switch in the top right. When set to Active, webhook listeners are registered in the router, schedule cron tasks are mounted in memory, and production execution policies apply.\n- Execution Settings: Under "Settings" in the top bar, you can configure "Save failed executions", "Save successful executions", and assign dedicated Error Workflows.',
+          secondaryVisual: {
+            diagramType: 'flow',
+            caption: 'The 3 Panes Inside Every n8n Node Window',
+            mermaidCode: `graph LR
+    P1["1. INPUT PANE (Left)<br/>What data came into this step?"] --> P2["2. SETTINGS PANE (Center)<br/>What should this step do with it?"]
+    P2 --> P3["3. OUTPUT PANE (Right)<br/>What did this step produce?"]`
+          },
+          technicalDetails: 'Testing vs. Active Modes:\n- Test step: Runs only the node you are currently editing, using cached data from the step before it.\n- Test workflow: Runs your entire workflow from the very first trigger node all the way to the end.\n- Active (Production) Mode: The toggle switch in the top right. When ON, n8n listens in the background 24/7 without needing you to press any buttons.',
           workedExample: {
-            scenario: 'Inspecting input vs output data inside the Edit Fields node modal.',
-            inputJson: [
-              {
-                "json": {
-                  "raw_first_name": "Marcus",
-                  "raw_last_name": "Vance",
-                  "order_total": 450
-                }
-              }
-            ],
-            transformationLogic: 'Combine first and last names into a unified `fullName` property and format currency string.',
-            outputJson: [
-              {
-                "json": {
-                  "fullName": "Marcus Vance",
-                  "formattedTotal": "$450.00"
-                }
-              }
-            ],
-            explanation: 'In the modal, the left pane displays the 3 raw fields. In the center, we configure the expressions `{{ $json.raw_first_name }} {{ $json.raw_last_name }}` and `\${{ $json.order_total }}.00`. The right pane immediately previews the resulting object.'
+            scenario: 'Opening an Edit Fields node to inspect input vs output data.',
+            inputJson: {
+              "customer_name": "Marcus Vance",
+              "item_ordered": "Standing Desk"
+            },
+            transformationLogic: 'Read the customer name from the left pane and output a friendly status message.',
+            outputJson: {
+              "customer_name": "Marcus Vance",
+              "item_ordered": "Standing Desk",
+              "status": "Order verified and ready for fulfillment"
+            },
+            explanation: 'The left pane showed the raw customer order. In the center, we added a status label. The right pane immediately showed the updated customer record.'
           },
           stepByStepLab: {
-            title: 'Navigating the Canvas and Running Your First Test',
-            goal: 'Create a new workflow, place a Manual Trigger, connect an Edit Fields node, and inspect execution data.',
+            title: 'Exploring the 3 Panes of a Node Window',
+            goal: 'Open a node window, identify the Input, Settings, and Output panes, and test a step.',
             steps: [
               {
                 stepNumber: 1,
-                title: 'Create a New Blank Workflow',
-                instruction: 'Open http://localhost:5678, click "+ Add workflow" in the top right, and name it "Lab 1 - Canvas Exploration".'
+                title: 'Open Your Existing Workflow',
+                instruction: 'Open your n8n workspace and click on the workflow you created in Module 0 (or create a new one with a Manual Trigger and an Edit Fields node).'
               },
               {
                 stepNumber: 2,
-                title: 'Add a Manual Trigger',
-                instruction: 'Click the "+" button on the canvas or press Tab. Search for "When clicking \'Test workflow\'" (Manual Trigger) and click to add it.'
+                title: 'Double-Click the Action Node',
+                instruction: 'Double-click the "Edit Fields" node. Notice how the large 3-pane modal opens over the canvas.'
               },
               {
                 stepNumber: 3,
-                title: 'Add and Configure an Edit Fields Node',
-                instruction: 'Drag from the output pin of the trigger and add "Edit Fields (Set)". Add a string field named `status` with value `Hello from n8n!`, and a number field named `timestamp` with expression `{{ Date.now() }}`.'
+                title: 'Locate the Input Pane (Left)',
+                instruction: 'Look at the left column. If your trigger has run, you will see the incoming items here. If empty, click "Test step" on the trigger node first.'
               },
               {
                 stepNumber: 4,
-                title: 'Execute and Inspect',
-                instruction: 'Click "Test step". Switch between Schema view, Table view, and JSON view in the right-hand output pane. Observe how n8n formats the output.'
+                title: 'Test and Inspect the Output Pane (Right)',
+                instruction: 'Click the orange "Test step" button in the center pane. Observe how the right pane instantly updates with your processed output data.'
               }
             ],
-            expectedResult: 'A green checkmark appears on both nodes, and the output pane shows your structured JSON item.'
+            expectedResult: 'You can comfortably navigate between the canvas and the 3-pane node modal.'
+          },
+          whatShouldISee: {
+            summary: 'You can clearly identify where incoming data sits, where settings are configured, and where results appear.',
+            indicators: [
+              'Left column shows: "INPUT" with your incoming data.',
+              'Center column shows: "PARAMETERS" with fields you can edit.',
+              'Right column shows: "OUTPUT" with a green checkmark.'
+            ]
           },
           commonMistakes: [
             {
-              mistake: 'Leaving a workflow Inactive while expecting external webhooks to trigger it.',
-              consequence: 'External webhooks receive 404 Not Found or 400 Bad Request because the production listener is disabled.',
-              correction: 'Always flip the "Active" toggle switch in the top right to ON when ready to receive live webhook traffic.'
-            },
-            {
-              mistake: 'Testing only downstream nodes without upstream data cached.',
-              consequence: 'The editor throws "No data found from previous node".',
-              correction: 'Run the preceding nodes first or click "Test workflow" to populate the canvas cache.'
+              mistake: 'Double-clicking the canvas background instead of the node icon.',
+              consequence: 'Nothing opens or the screen zooms in and out.',
+              correction: 'Always double-click directly on the node box or its icon to open its settings.'
             }
           ],
           knowledgeCheck: [
             {
               id: 'q2-1',
-              question: 'What is the primary difference between "Test step" and "Test workflow"?',
+              question: 'In the n8n node modal, where do you see the data produced by the current step after testing?',
               options: [
-                'Test step deletes the workflow; Test workflow saves it.',
-                'Test step executes only the currently open node using cached data from the prior node; Test workflow runs the entire pipeline from the trigger node.',
-                'Test step only works for JavaScript code.',
-                'There is no difference.'
+                'In the left pane (Input).',
+                'In the right pane (Output).',
+                'In your computer\'s trash can.',
+                'Inside your browser history.'
               ],
               correctIndex: 1,
-              explanation: 'Test step isolates the single node you are editing and runs it against cached input, enabling fast iteration. Test workflow triggers the complete sequence from the beginning.'
+              explanation: 'The right pane always displays the Output produced by the node.'
             }
           ],
           practicalChallenge: {
-            prompt: 'In your test workflow, add a second Edit Fields node connected to the first. Extract the `timestamp` field from the first node and transform it into a human-readable ISO date string using JavaScript.',
-            hints: ['Use the expression `{{ new Date($json.timestamp).toISOString() }}` in the new field.'],
-            solutionNotes: 'The output will contain an ISO timestamp string like `2026-10-25T00:45:00.000Z` linked back to the original item.'
+            prompt: 'Practice dragging a node on the canvas. Click and hold a node with your mouse, move it around, and observe how the connection line stretches smoothly without breaking.',
+            hints: ['You can also use your mouse scroll wheel or two fingers on a trackpad to zoom in and out of the canvas.'],
+            solutionNotes: 'The canvas is an infinite whiteboard. You can arrange nodes in clean horizontal lines for maximum readability.'
           },
           keyTakeaways: [
-            'n8n nodes flow left to right, processing arrays of JSON items.',
-            'Double-clicking any node gives you a real-time data inspector with Input (left) and Output (right).',
-            'Workflows must be toggled to Active to execute on automated schedules or live webhooks.'
+            'Workflows flow from left to right: data enters the left pin and exits the right pin.',
+            'Double-clicking any node opens its 3 panes: Input (left), Settings (center), and Output (right).',
+            'A green checkmark means the step ran successfully.'
           ],
           officialDocLinks: [
             {
-              title: 'Official n8n Workflow Editor Guide',
-              url: 'https://docs.n8n.io/canvas/canvas-navigation/',
-              note: 'Full guide to keyboard shortcuts, pan/zoom, and node selection.'
+              title: 'Official Canvas Navigation Guide',
+              url: 'https://docs.n8n.io/workflows/canvas/',
+              note: 'Tips for organizing, aligning, and navigating large workflow canvases.'
             }
           ]
         }
@@ -163,134 +145,125 @@ export const stage1: Stage = {
       number: 3,
       stageId: 'stage-1',
       title: 'Nodes, Triggers, and Workflow Execution',
-      subtitle: 'The Core Engine Lifecycle and Branching Logic',
-      description: 'Understand the four categories of triggers (Manual, Schedule, Webhook, App Events), how nodes execute in topological order, and how branching works.',
+      subtitle: 'The Alarm Clocks vs. The Helping Hands',
+      description: 'Understand the difference between Triggers (the starting event) and Actions (the work being done), and learn when to use test runs vs. live active workflows.',
       difficulty: 'Beginner',
-      estimatedMinutes: 55,
+      estimatedMinutes: 40,
       lessons: [
         {
           id: 'lesson-3-1',
           moduleId: 'module-3',
           stageId: 'stage-1',
-          title: 'Triggers & Execution Topology',
-          subtitle: 'From event receipt to branching and completion',
+          title: 'Triggers vs. Actions: How Workflows Wake Up',
+          subtitle: 'The difference between starting events and the steps that follow',
           difficulty: 'Beginner',
-          estimatedMinutes: 55,
+          estimatedMinutes: 40,
           prerequisites: ['Module 2'],
-          whyItMatters: 'Every workflow starts with a trigger. If you pick the wrong trigger type (e.g. polling every 1 minute instead of using an instant webhook), you waste compute resources, hit API rate limits, and introduce unwanted latency into business operations.',
-          relatableProblem: 'A company wants instant notifications when a Stripe charge fails. A developer sets up a Schedule trigger that queries Stripe every 5 minutes. During high-volume sales events, Stripe rate-limits the requests, and customers whose payments fail have to wait up to 5 minutes before receiving a retry link. Switching to a Stripe Webhook Trigger makes the response instant (under 500ms) with zero polling overhead.',
-          firstPrinciplesExplanation: 'n8n triggers fall into four architectural archetypes:\n1. Manual Trigger: Used exclusively for interactive design and debugging inside the editor.\n2. Schedule Trigger: Based on node-cron. Executes on defined chronometric intervals (every X minutes, daily at 9am in specific timezones, or custom cron expressions).\n3. Webhook Trigger: Exposes an HTTP endpoint on your n8n server. An external system (Stripe, GitHub, Typeform) makes an HTTP POST/GET request to this URL, immediately waking up the workflow.\n4. App-Specific Event Triggers: Nodes with pre-built polling or webhook-subscription management (e.g., Slack "On Message Posted", Gmail "On Email Received").\n\nExecution Order:\nn8n executes nodes according to directed acyclic graph (DAG) topological sorting. When a node has multiple outgoing branches, n8n executes the branches sequentially or in parallel depending on the execution mode, passing the array of output items down each connected branch.',
+          whyDoINeedThis: 'Every automation must start somewhere. Knowing the difference between manual triggers, scheduled alarms, and instant webhooks ensures your automations wake up at the exact right moment.',
+          relatableProblem: 'A beginner builds a wonderful workflow to send a daily sales summary email. But they use a Manual Trigger instead of a Schedule Trigger. The next morning, no email is sent because nobody was there to manually click the "Test" button. Understanding trigger types prevents this mistake.',
+          firstPrinciplesExplanation: 'There are only two major categories of nodes in n8n:\n\n1. TRIGGER NODES (The Alarm Clocks):\n- These always sit on the far left of your workflow.\n- Their only job is to detect when something happens and wake up the workflow.\n- Common examples:\n  • Manual Trigger: Wakes up when YOU click "Test workflow" (for building and testing).\n  • Schedule Trigger: Wakes up at a specific time (e.g. Every Monday at 9:00 AM, or every 15 minutes).\n  • Webhook Trigger: Wakes up the exact millisecond an external app pushes data (e.g. Stripe payment received, form submitted).\n\n2. ACTION NODES (The Helping Hands):\n- These sit after your trigger node.\n- Their job is to do the actual work with the data.\n- Common examples:\n  • Edit Fields (Set): Creates or cleans up data.\n  • Google Sheets: Appends a new row to your spreadsheet.\n  • Slack / Gmail: Sends a notification or email.\n  • If Node: Makes a decision (e.g. Is order total > $100?).\n\nThink of it this way: The Trigger is the doorbell ringing; the Actions are you walking to the door, opening it, and greeting your guest.',
           visualExplanation: {
             diagramType: 'mermaid',
-            caption: 'Execution Flow and Branching Lifecycle',
-            mermaidCode: `sequenceDiagram
-  autonumber
-  actor User as External Event (Stripe)
-  participant WH as Webhook Trigger
-  participant IF as If Node (Condition)
-  participant S1 as Success Branch (Email)
-  participant S2 as Failure Branch (Alert)
+            caption: 'Triggers (When) vs. Actions (Do)',
+            mermaidCode: `graph LR
+    subgraph TriggerZone["1. THE TRIGGER (The Alarm Clock)"]
+      T1["🔔 When clicking 'Test workflow'<br/>OR ⏰ Every morning at 9am<br/>OR 🚀 When form is submitted"]
+    end
 
-  User->>WH: HTTP POST /webhook/stripe-charge
-  WH->>WH: Parse Payload into JSON Item Array
-  WH->>IF: Pass [ { json: { status: 'failed' } } ]
-  IF->>IF: Evaluate Condition ($json.status === 'succeeded')
-  alt Condition False
-    IF->>S2: Output pin 1 (False Branch)
-    S2->>S2: Send PagerDuty / Slack Alert
-  else Condition True
-    IF->>S1: Output pin 0 (True Branch)
-    S1->>S1: Send Receipt Email
-  end`
+    subgraph ActionZone["2. THE ACTIONS (The Helping Hands)"]
+      A1["📝 Prepare Data"] --> A2["📊 Save in Spreadsheet"]
+      A2 --> A3["💬 Send Notification"]
+    end
+
+    T1 -->|Wakes Up Workflow| A1
+
+    style TriggerZone fill:#0F172A,stroke:#3B82F6,stroke-width:2px,color:#FFFFFF
+    style ActionZone fill:#0F172A,stroke:#10B981,stroke-width:2px,color:#FFFFFF`
           },
-          technicalDetails: 'Key Workflow Settings:\n- Error Trigger: Allows you to designate a global error-handling workflow that automatically catches unhandled node crashes across the entire execution.\n- Timezone: Configurable per workflow under Workflow Settings -> Timezone. Always set this explicitly when using Schedule triggers to avoid daylight savings or UTC discrepancies.\n- Timeout: Maximum execution time in seconds. By default, workflows run until complete, but long-running tasks should have a timeout (e.g. 300s) to prevent memory leaks.',
+          technicalDetails: 'Workflow Execution Lifecycle:\n1. Trigger awakens: Produces initial item(s).\n2. Downstream nodes execute one by one in topological order.\n3. If any node encounters an unhandled error, execution stops and the node turns red.\n4. You can inspect the entire history under the "Executions" tab in the left sidebar.',
           workedExample: {
-            scenario: 'Routing customer feedback by sentiment score.',
-            inputJson: [
-              {
-                "json": {
-                  "customer": "Sarah Connor",
-                  "sentimentScore": 0.2,
-                  "feedback": "System crashed during checkout."
-                }
-              }
-            ],
-            transformationLogic: 'Branch on `sentimentScore < 0.4` to route critical complaints to escalation Slack channel.',
-            outputJson: [
-              {
-                "json": {
-                  "routedTo": "Escalation Support Queue",
-                  "priority": "CRITICAL",
-                  "customer": "Sarah Connor",
-                  "sentimentScore": 0.2
-                }
-              }
-            ],
-            explanation: 'The If node evaluates the expression `{{ $json.sentimentScore < 0.4 }}`. Since 0.2 < 0.4 is true, the item is pushed out of Output 0 (True), triggering the Escalation branch while the standard acknowledgment branch receives 0 items.'
+            scenario: 'Comparing a Manual Trigger with a Schedule Trigger.',
+            inputJson: {
+              "trigger_type": "Schedule",
+              "interval": "Every day at 8:00 AM"
+            },
+            transformationLogic: 'Automatically run every morning to fetch weather data and send a brief.',
+            outputJson: {
+              "scheduled_time": "08:00:00",
+              "brief_sent": true
+            },
+            explanation: 'Unlike a manual trigger that requires human clicks, a Schedule Trigger runs automatically on your server while you sleep.'
           },
           stepByStepLab: {
-            title: 'Building a Multi-Branch Scheduled Diagnostic Reporter',
-            goal: 'Build a scheduled workflow that checks server health metrics and routes to different actions based on memory thresholds.',
+            title: 'Replacing a Manual Trigger with a Schedule Trigger',
+            goal: 'See how easily you can swap the starting trigger of a workflow.',
             steps: [
               {
                 stepNumber: 1,
                 title: 'Add a Schedule Trigger',
-                instruction: 'Add a Schedule Trigger set to trigger every 1 hour (for testing, you can use the Manual Trigger button).'
+                instruction: 'On your canvas, click "+ Add first step". Search for "Schedule" and choose "Schedule Trigger".'
               },
               {
                 stepNumber: 2,
-                title: 'Add a Mock Metrics Node',
-                instruction: 'Add an Edit Fields node simulating server stats: `cpuLoad: 88`, `memoryUsedPercent: 92`, `host: "prod-db-01"`.'
+                title: 'Set the Interval',
+                instruction: 'In the trigger settings, set "Trigger Interval" to "Hours" and set "Hours between triggers" to 1 (or choose "Days" at 09:00 AM).'
               },
               {
                 stepNumber: 3,
-                title: 'Add an If Node',
-                instruction: 'Connect an If node. Condition: Number `{{ $json.memoryUsedPercent }}` Greater Than `85`.'
+                title: 'Connect it to an Action Node',
+                instruction: 'Connect the output pin of your Schedule Trigger to an Edit Fields node that sets `status = "Daily check completed"`.'
               },
               {
                 stepNumber: 4,
-                title: 'Connect Both Branches',
-                instruction: 'On the True output, connect an Edit Fields node setting `alertLevel: "EMERGENCY"`. On the False output, connect one setting `alertLevel: "NORMAL"`. Test the step and confirm which branch activates.'
+                title: 'Test the Step',
+                instruction: 'Click "Test step" to simulate the trigger firing right now without waiting for the clock.'
               }
             ],
-            expectedResult: 'The True branch activates with the EMERGENCY status because 92 > 85.'
+            expectedResult: 'A workflow that knows how to run automatically on a timer.'
+          },
+          whatShouldISee: {
+            summary: 'Your schedule node executes and passes the current date and time to downstream nodes.',
+            indicators: [
+              'Schedule trigger shows a clock icon on the canvas.',
+              'Testing produces a timestamp: `timestamp: "2026-10-26T..."`'
+            ]
           },
           commonMistakes: [
             {
-              mistake: 'Connecting two branches back into an action node without a Merge node.',
-              consequence: 'The downstream node executes twice—once for each incoming branch—or fails if data shapes differ.',
-              correction: 'Use the `Merge` node when you want to join multiple diverging branches back into a single unified stream.'
+              mistake: 'Forgetting to switch the workflow to "Active" when using a Schedule or Webhook trigger.',
+              consequence: 'The schedule only runs when you press Test in your browser, not automatically in the background.',
+              correction: 'When your workflow is finished and tested, flip the "Active" toggle switch in the top right corner to ON.'
             }
           ],
           knowledgeCheck: [
             {
               id: 'q3-1',
-              question: 'When an If node evaluates an item and routes it down the "true" branch, what happens to the "false" output pin?',
+              question: 'Where do Trigger nodes sit in an n8n workflow?',
               options: [
-                'It sends an empty error object.',
-                'It outputs 0 items, meaning connected downstream nodes on that branch do not execute.',
-                'It halts the entire workflow with an exception.',
-                'It pauses until the true branch finishes.'
+                'In the very middle of the workflow.',
+                'At the very end on the right.',
+                'On the far left as the very first node.',
+                'Inside your computer settings.'
               ],
-              correctIndex: 1,
-              explanation: 'In n8n, if a branch receives 0 items, subsequent nodes on that branch are not invoked. This is the foundation of conditional execution.'
+              correctIndex: 2,
+              explanation: 'Because workflows flow from left to right, the trigger is always the first node on the far left.'
             }
           ],
           practicalChallenge: {
-            prompt: 'Upgrade the If node to a Switch node with 3 routing rules: Memory > 90 (Critical), Memory between 70 and 90 (Warning), and Memory < 70 (Healthy).',
-            hints: ['Use the Switch node in "Rules" mode with multiple routing output conditions.'],
-            solutionNotes: 'The Switch node produces 3 distinct output pins, allowing granular multi-way routing without chaining nested If nodes.'
+            prompt: 'Look at the trigger options in n8n. Open the Add Node menu, click "Trigger", and see how many different services (Slack, Stripe, Typeform, Webhook, Schedule) can wake up an n8n workflow.',
+            hints: ['Type "trigger" in the search box to view all available starters.'],
+            solutionNotes: 'n8n includes hundreds of pre-built triggers for popular web applications.'
           },
           keyTakeaways: [
-            'Triggers define when and how a workflow awakens: on a schedule, via webhooks, or from app events.',
-            'Data travels down branches as arrays of items; branches with 0 items do not execute downstream nodes.',
-            'Always set explicit workflow timezones and configure global error handling workflows.'
+            'Trigger nodes wake up the workflow; Action nodes do the work.',
+            'Manual Triggers are for testing; Schedule and Webhook triggers are for 24/7 production.',
+            'Remember to toggle the Active switch to ON when your workflow is ready for live use.'
           ],
           officialDocLinks: [
             {
-              title: 'Official n8n Triggers Overview',
-              url: 'https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.scheduletrigger/',
-              note: 'Detailed reference for Schedule and Webhook triggers.'
+              title: 'Official Triggers Guide',
+              url: 'https://docs.n8n.io/workflows/components/',
+              note: 'Overview of triggers, actions, and sub-nodes.'
             }
           ]
         }
@@ -300,185 +273,138 @@ export const stage1: Stage = {
       id: 'module-4',
       number: 4,
       stageId: 'stage-1',
-      title: 'Understanding JSON and Data Structures',
-      subtitle: 'The Universal Language of Modern Automation',
-      description: 'Master JSON objects, arrays, keys, nested hierarchies, and the strict n8n data contract: an array of objects, each containing a "json" property.',
+      title: 'Understanding JSON Without Confusion',
+      subtitle: 'The Universal Language of Digital Information',
+      description: 'Learn what JSON really is through simple everyday analogies (like address cards and receipts), understand curly braces and quotes, and master how n8n organizes records.',
       difficulty: 'Beginner',
-      estimatedMinutes: 65,
+      estimatedMinutes: 45,
       lessons: [
         {
           id: 'lesson-4-1',
           moduleId: 'module-4',
           stageId: 'stage-1',
-          title: 'JSON Mastery & The n8n Item Contract',
-          subtitle: 'Why everything in n8n is an Array of Items with a json key',
+          title: 'JSON Explained for Complete Beginners',
+          subtitle: 'The address card analogy: how computers write down information',
           difficulty: 'Beginner',
-          estimatedMinutes: 65,
+          estimatedMinutes: 45,
           prerequisites: ['Module 2'],
-          whyItMatters: '90% of beginner errors in n8n come from misunderstanding JSON structures—confusing an object with an array, failing to access nested child properties, or not knowing why a node executed 5 times instead of once. Once you master JSON and n8n’s item schema, building automations becomes intuitive.',
-          relatableProblem: 'A developer queries an API that returns a list of 50 customers. When they pass it to the Slack node, the Slack node sends 50 separate spam messages to the channel within 1 second. Why? Because the API returned 50 distinct n8n items, and n8n nodes execute *once for each incoming item* by default. Understanding item arrays is the difference between clean automation and catastrophic spam.',
-          firstPrinciplesExplanation: 'JSON (JavaScript Object Notation) has 6 fundamental data types:\n1. String: text wrapped in quotes (`"hello"`)\n2. Number: integer or floating-point (`42`, `3.14`)\n3. Boolean: `true` or `false`\n4. Null: explicit absence of value (`null`)\n5. Object: unordered key-value pairs wrapped in curly braces (`{ "name": "Alice", "age": 30 }`)\n6. Array: ordered list of elements wrapped in square brackets (`[ "apple", "banana" ]` or `[ { "id": 1 }, { "id": 2 } ]`)\n\nTHE CRITICAL N8N DATA CONTRACT:\nEvery single node in n8n expects and outputs a top-level ARRAY of objects. Furthermore, each item in that array MUST contain a `json` key containing the actual record fields:\n```json\n[\n  {\n    "json": {\n      "id": 101,\n      "name": "Acme Corp"\n    }\n  },\n  {\n    "json": {\n      "id": 102,\n      "name": "Stark Industries"\n    }\n  }\n]\n```\nIf an upstream node returns 10 items in this array, downstream nodes will loop and execute 10 times automatically unless you aggregate them with an Edit Fields, Code, or Summarize node.',
+          whyDoINeedThis: 'When computers share information (like a customer submitting a form), they need a tidy, organized format so nothing gets mixed up. That format is called JSON. Once you understand its 4 basic punctuation marks, you will be able to read any data on the internet with ease.',
+          relatableProblem: 'Beginners open an API response, see lots of curly braces `{ }`, quotes `" "`, colons `:`, and commas `,`, and think: "This looks like matrix code, I cannot understand this!" In reality, JSON is as simple as filling out a paper index card.',
+          firstPrinciplesExplanation: 'Think of an index card in an old-fashioned paper rolodex:\n\nName: Alex Smith\nAge: 28\nEmail: alex@example.com\nIs Member: Yes\n\nHow does a computer write that exact same card?\n```json\n{\n  "name": "Alex Smith",\n  "age": 28,\n  "email": "alex@example.com",\n  "isMember": true\n}\n```\n\nLet\'s break down every single character so it makes total sense:\n1. The Curly Braces `{ }`: Think of them as the front and back of the paper card. Everything inside the `{ }` belongs to this one record.\n2. The Quotes `" "`: Tell the computer: "This is a word or a label, not a math equation".\n3. The Colon `:`: Simply means "is". So `"name": "Alex"` means: "The name is Alex".\n4. The Comma `,`: Separates each line, just like writing a grocery list.\n\nWhat about Lists (Arrays)?\nWhen you have multiple things (like a shopping list of fruits), computers wrap them in square brackets `[ ]`:\n```json\n[\n  "Apples",\n  "Bananas",\n  "Oranges"\n]\n```\n\nThat is 95% of what you need to know about JSON! A curly brace `{ }` holds an item with labels; a square bracket `[ ]` holds a list of items.',
           visualExplanation: {
             diagramType: 'mermaid',
-            caption: 'Visual Hierarchy: Raw Data vs. n8n Items Contract',
-            mermaidCode: `graph TD
-  subgraph RawAPI["External Raw API Response"]
-    R1["{
-  'company': 'Acme',
-  'users': ['Alice', 'Bob', 'Charlie']
-}"]
-  end
+            caption: 'Everyday Address Card vs. Its Clean JSON Representation',
+            mermaidCode: `graph LR
+    subgraph Human["How a Human Sees It (Paper Card)"]
+      H1["Name: Alex Smith<br/>City: London<br/>Orders: 3"]
+    end
 
-  subgraph n8nContract["n8n Internal Items Contract (Array of Objects)"]
-    A1["Top-Level Array [ ... ]"]
-    A1 --> I1["Item 0: { json: { company: 'Acme', userCount: 3 } }"]
-    A1 --> I2["Item 1: { json: { company: 'Beta', userCount: 1 } }"]
-  end
+    subgraph Computer["How a Computer Reads It (JSON)"]
+      C1["{<br/>&nbsp;&nbsp;'name': 'Alex Smith',<br/>&nbsp;&nbsp;'city': 'London',<br/>&nbsp;&nbsp;'orders': 3<br/>}"]
+    end
 
-  subgraph LoopBehavior["Downstream Node Execution Behavior"]
-    I1 --> E1["Execution 1: Processes Item 0"]
-    I2 --> E2["Execution 2: Processes Item 1"]
-  end
+    H1 -->|Identical Information| C1
 
-  style RawAPI fill:#1E293B,stroke:#94A3B8,stroke-width:1px,color:#F8FAFC
-  style n8nContract fill:#0F172A,stroke:#10B981,stroke-width:2px,color:#F8FAFC
-  style LoopBehavior fill:#1E293B,stroke:#3B82F6,stroke-width:2px,color:#F8FAFC`
+    style Human fill:#1E293B,stroke:#94A3B8,stroke-width:1px,color:#F8FAFC
+    style Computer fill:#0F172A,stroke:#10B981,stroke-width:2px,color:#F8FAFC`
           },
           secondaryVisual: {
-            diagramType: 'json_diff',
-            caption: 'Before & After: Converting a Nested List into n8n Items',
-            beforeAfter: {
-              beforeTitle: 'Raw API Output (Single Item with Array Property)',
-              beforeData: {
-                "order_id": 501,
-                "items": [
-                  { "sku": "A1", "price": 10 },
-                  { "sku": "B2", "price": 25 }
-                ]
-              },
-              afterTitle: 'Normalized n8n Items (Split Into Independent Records)',
-              afterData: [
-                { "order_id": 501, "sku": "A1", "price": 10 },
-                { "order_id": 501, "sku": "B2", "price": 25 }
-              ]
-            }
+            diagramType: 'flow',
+            caption: 'The 4 Punctuation Marks of JSON',
+            mermaidCode: `graph TD
+    B1["{ } Curly Braces: The Envelope/Card"] --> B2["' ' Quotes: Plain text/words"]
+    B2 --> B3[": Colon: Means 'is'"]
+    B3 --> B4[", Comma: Separates items on the list"]`
           },
-          technicalDetails: 'Key n8n JSON Rules:\n- Property Access: In expressions, `$json.customer.address.city` accesses nested object keys.\n- Bracket Notation: If a key contains hyphens, spaces, or dots (e.g. `order-id`), access it with brackets: `$json["order-id"]`.\n- Optional Chaining: To prevent "Cannot read properties of undefined" errors when a nested object might be missing, use `?.`: `$json?.customer?.address?.city`.\n- Nullish Coalescing: To provide a safe fallback for missing values: `$json.phone ?? "N/A"`.\n- Binary Data: If an item contains a file (PDF, image, CSV), n8n adds a parallel `binary` property alongside `json`: `{ "json": { ... }, "binary": { "data": { ... } } }`.',
+          technicalDetails: 'The n8n Item Rule:\nIn n8n, information always travels as a list of items wrapped with a `json` label:\n```json\n[\n  {\n    "json": {\n      "name": "Alex",\n      "city": "London"\n    }\n  }\n]\n```\nBecause n8n sees a list of items, if you pass 5 customer records to a node, n8n will automatically run the node 5 times (once for each customer).',
           workedExample: {
-            scenario: 'Inspecting messy e-commerce webhook data and navigating deep keys.',
-            inputJson: [
-              {
-                "json": {
-                  "event": "charge.successful",
-                  "data": {
-                    "customer": {
-                      "billing_details": {
-                        "address": {
-                          "postal_code": "94103",
-                          "country": "US"
-                        }
-                      }
-                    },
-                    "line_items": [
-                      { "title": "Pro Plan Subscription", "amount_cents": 4900 }
-                    ]
-                  }
-                }
-              }
-            ],
-            transformationLogic: 'Extract deep postal code and calculate dollar amount with safe fallbacks.',
-            outputJson: [
-              {
-                "json": {
-                  "postalCode": "94103",
-                  "country": "US",
-                  "firstItemTitle": "Pro Plan Subscription",
-                  "amountDollars": 49.00
-                }
-              }
-            ],
-            explanation: 'We access `postalCode` with `{{ $json.data.customer.billing_details.address.postal_code }}` and the first line item with `{{ $json.data.line_items[0].title }}`.'
+            scenario: 'Reading a simple customer order in JSON format.',
+            inputJson: {
+              "order_id": 1042,
+              "customer": "Sarah Jenkins",
+              "items": ["Coffee Beans", "Oat Milk"],
+              "total_price": 24.50,
+              "paid": true
+            },
+            transformationLogic: 'Identify the customer name, order total, and payment status.',
+            outputJson: {
+              "customer": "Sarah Jenkins",
+              "total_price": 24.50,
+              "paid": true
+            },
+            explanation: 'Notice how easy this is to read once you know the 4 symbols! The customer is Sarah, total is 24.50, and paid is true.'
           },
           stepByStepLab: {
-            title: 'Deconstructing Nested JSON with the Edit Fields Node',
-            goal: 'Take a complex nested invoice payload and flatten it into clean, flat CRM-ready fields.',
+            title: 'Inspecting JSON Views Inside n8n',
+            goal: 'Toggle between Table view and JSON view inside the n8n Output panel.',
             steps: [
               {
                 stepNumber: 1,
-                title: 'Add a Code Node to Simulate API Data',
-                instruction: 'Add a Code node set to "Run Once for All Items" returning the sample nested e-commerce payload shown above.'
+                title: 'Open Your Test Workflow',
+                instruction: 'Open your workflow from Lesson 0-3 and click "Test workflow".'
               },
               {
                 stepNumber: 2,
-                title: 'Add an Edit Fields Node',
-                instruction: 'Connect an Edit Fields (Set) node. Toggle "Keep Only Set Fields" to ON.'
+                title: 'Inspect the Table View',
+                instruction: 'In the Output panel on the right, look at the default view. You will see your data presented like a clean spreadsheet table with columns and rows.'
               },
               {
                 stepNumber: 3,
-                title: 'Map Properties',
-                instruction: 'Add a field `customerPostal`: `{{ $json.data.customer.billing_details.address.postal_code }}`. Add a field `totalAmount`: `{{ $json.data.line_items[0].amount_cents / 100 }}`.'
+                title: 'Switch to JSON View',
+                instruction: 'At the top of the Output panel, click the button labeled "{ } JSON". Notice how the exact same information appears with curly braces `{ }` and quotes.'
               },
               {
                 stepNumber: 4,
-                title: 'Test and Inspect',
-                instruction: 'Click Test step. Confirm that the messy nested hierarchy has been transformed into a clean, flat 2-field record.'
+                title: 'Compare the Two Views',
+                instruction: 'Switch back and forth between "Table" and "JSON". Realize that they are the exact same data shown in two different visual styles!'
               }
             ],
-            expectedResult: 'A clean 1-item array containing only `customerPostal` and `totalAmount`.'
+            expectedResult: 'You can freely switch between Table and JSON view without feeling intimidated by curly braces.'
+          },
+          whatShouldISee: {
+            summary: 'Your output panel clearly displays the structured JSON record.',
+            indicators: [
+              'The JSON begins with `{` and ends with `}`.',
+              'Field names are highlighted in colors with clean values.'
+            ]
           },
           commonMistakes: [
             {
-              mistake: 'Using `$json.items.price` when `items` is an array of objects.',
-              consequence: 'Returns `undefined` because an array does not possess a direct property named `price`.',
-              correction: 'Specify the index: `$json.items[0].price`, or use an array method like `$json.items.map(i => i.price)` or the "Split Out" node.'
-            },
-            {
-              mistake: 'Trying to access `$json.order-id` without bracket notation.',
-              consequence: 'JavaScript interprets the hyphen as a subtraction operator (`$json.order` minus `id`), causing NaN or syntax errors.',
-              correction: 'Always wrap hyphenated or spaced keys in brackets: `$json["order-id"]`.'
+              mistake: 'Forgetting a comma between fields.',
+              consequence: 'The computer shows a "Syntax Error" because it doesn\'t know where one field ends and the next begins.',
+              correction: 'Always ensure there is a comma `,` after every line except the last one.'
             }
           ],
           knowledgeCheck: [
             {
               id: 'q4-1',
-              question: 'Why does an action node execute 5 times if the preceding node outputs an array of 5 items?',
+              question: 'In JSON, what do curly braces `{ }` represent?',
               options: [
-                'It is an error in n8n configuration.',
-                'By default, n8n executes action nodes once for every individual item present in the incoming items array.',
-                'The workflow is stuck in an infinite loop.',
-                'The API sent duplicate webhooks.'
+                'A mathematical division problem.',
+                'A single record or object holding labeled information.',
+                'A link to a website.',
+                'An error message.'
               ],
               correctIndex: 1,
-              explanation: 'n8n is fundamentally item-based. Each element in the incoming array represents an independent business record (e.g., an order, a user, a lead), so nodes iterate over them automatically.'
-            },
-            {
-              id: 'q4-2',
-              question: 'Given an object with potential missing data, which expression safely retrieves the city without crashing if `shipping` is null?',
-              options: [
-                '{{ $json.customer.shipping.city }}',
-                '{{ $json.customer?.shipping?.city ?? "Default City" }}',
-                '{{ city.shipping.customer }}',
-                '{{ $json[city] }}'
-              ],
-              correctIndex: 1,
-              explanation: 'Optional chaining (`?.`) gracefully returns undefined instead of throwing a TypeError if an intermediate property is null or undefined, and nullish coalescing (`??`) provides a reliable fallback.'
+              explanation: 'Curly braces hold an object (like a single address card or receipt).'
             }
           ],
           practicalChallenge: {
-            prompt: 'Given an array of 3 line items inside `$json.cart.items`, write an expression that calculates the sum of all item prices using the native JavaScript array `.reduce()` method.',
-            hints: ['Use `{{ $json.cart.items.reduce((total, item) => total + item.price, 0) }}`.'],
-            solutionNotes: 'This calculates the grand total directly inside an expression without needing a separate Code or Loop node.'
+            prompt: 'Write out a small 3-line JSON snippet representing your favorite food: include its name, price, and whether you like it spicy (true or false).',
+            hints: ['Remember quotes for text, numbers with no quotes, and true/false for boolean.'],
+            solutionNotes: '{\n  "food": "Tacos",\n  "price": 8.50,\n  "isSpicy": true\n}'
           },
           keyTakeaways: [
-            'All data in n8n is strictly formatted as an array of objects with a top-level `json` key.',
-            'Nodes execute once per item in the array unless aggregated.',
-            'Use optional chaining `?.` and bracket notation `$json["key-name"]` to prevent expression crashes.'
+            'JSON is just an organized digital index card.',
+            'Curly braces `{ }` hold objects; square brackets `[ ]` hold lists.',
+            'Colons `:` mean "is", and commas `,` separate fields.',
+            'In n8n, you can view your data as a friendly table or as raw JSON whenever you choose.'
           ],
           officialDocLinks: [
             {
-              title: 'Official n8n Data Structure & Item Linking Guide',
+              title: 'Official n8n Data Structure Guide',
               url: 'https://docs.n8n.io/data/data-structure/',
-              note: 'Core explanation of items, JSON structure, and paired items.'
+              note: 'How n8n handles JSON records and item lists.'
             }
           ]
         }
@@ -488,145 +414,136 @@ export const stage1: Stage = {
       id: 'module-5',
       number: 5,
       stageId: 'stage-1',
-      title: 'Data Mapping and Expressions',
-      subtitle: 'Expressions, Item Linking, and Modern Syntax',
-      description: 'Master the n8n expression engine. Learn how to cross-reference data from earlier nodes using `$("Node Name")`, master `pairedItem` linking, and manipulate dates using Luxon.',
-      difficulty: 'Intermediate',
-      estimatedMinutes: 60,
+      title: 'Data Mapping and Expressions Without Code',
+      subtitle: 'Passing Information Between Steps Using Drag-and-Drop',
+      description: 'Learn how to take a customer\'s name from Step 1 and use it in Step 2 without programming. Master visual drag-and-drop mapping and understand simple expressions.',
+      difficulty: 'Beginner',
+      estimatedMinutes: 45,
       lessons: [
         {
           id: 'lesson-5-1',
           moduleId: 'module-5',
           stageId: 'stage-1',
-          title: 'Modern Expressions & Paired-Item Linking',
-          subtitle: 'Referencing past nodes, handling paired items, and Luxon dates',
-          difficulty: 'Intermediate',
-          estimatedMinutes: 60,
+          title: 'How to Connect Information Between Nodes',
+          subtitle: 'The drag-and-drop superpower: {{ $json.name }} explained gently',
+          difficulty: 'Beginner',
+          estimatedMinutes: 45,
           prerequisites: ['Module 4'],
-          whyItMatters: 'In complex multi-step workflows, an action node at step 6 frequently needs data from step 1 (like the original customer email) as well as data from step 5 (like a generated invoice PDF ID). If you don\'t understand cross-node referencing and paired-item mechanics, your expressions will pull the wrong customer\'s data or throw indexing errors.',
-          relatableProblem: 'You have a workflow that fetches 10 leads, enriches each lead with Clearbit, and creates a record in HubSpot. In the HubSpot node, you reference the original form submission using `$("Form Trigger").item.json.email`. Without understanding item pairing, if Clearbit filtered out 2 invalid leads, lead #5 might be accidentally updated with lead #7\'s email address. Item linking prevents this catastrophic data misalignment.',
-          firstPrinciplesExplanation: 'In n8n, expressions are wrapped in double curly braces: `{{ ... }}`.\n\nKey Expression Global Variables:\n1. `$json`: References the JSON data of the *current item* entering the node.\n2. `$("Node Name").item.json.field`: References the *paired item* from an upstream node named "Node Name".\n3. `$("Node Name").all()`: Returns the entire array of all items output by that node.\n4. `$("Node Name").first().json`: Shorthand to grab the first item from that node regardless of current item index.\n5. `DateTime`: Built-in instance of the Luxon library for advanced date and time manipulation.\n6. `$now` / `$today`: Quick Luxon helpers for the current timestamp.\n\nWHAT IS PAIRED-ITEM LINKING?\nWhen an upstream node outputs 5 items and passes them to a Filter node that drops 2 items, the output array now has 3 items. Behind the scenes, n8n maintains a `pairedItem` index linking output item 0 back to its original input item (e.g. index 2). When you write `$("Trigger").item.json.email`, n8n uses this internal link to retrieve the exact matching ancestor item, NOT just whatever happens to be at index 0!',
+          whyDoINeedThis: 'The real magic of automation happens when Step 2 can reuse information from Step 1—like taking a customer\'s name from a form and inserting it into an email that says: "Hi [Name], thank you for reaching out!". Expressions make this happen automatically.',
+          relatableProblem: 'Imagine you want to send a personalized confirmation email. If you type "Hi customer", it feels robotic. But how do you tell n8n: "Grab whatever name arrived in the form and insert it here"? That is exactly what an expression does.',
+          firstPrinciplesExplanation: 'Think of "Mail Merge" in Microsoft Word or Google Docs:\nYou type: "Hello {{First Name}}, your appointment is ready."\nWhen the letter is printed, the computer replaces `{{First Name}}` with "Alex" or "Sarah".\n\nn8n uses the exact same idea!\nWhenever you see double curly braces `{{ ... }}`, it tells n8n:\n"Do NOT type the literal letters inside here—look inside the incoming data and grab the real value!"\n\nHow do you write an expression?\nThe best part is: YOU DO NOT EVEN HAVE TO TYPE IT!\nIn n8n, you can simply DRAG AND DROP:\n1. Open the node settings.\n2. Look at the left INPUT pane.\n3. Click and hold the field you want (e.g. `customer_name`).\n4. Drag your mouse across the screen and drop it into the setting field on the right!\n5. n8n automatically fills in `{{ $json.customer_name }}` for you!\n\nWhat does `$json` mean?\n`$json` is simply shorthand for: "The data entering this node right now". So `$json.customer_name` means: "Grab the customer_name from the current data".',
           visualExplanation: {
             diagramType: 'mermaid',
-            caption: 'How n8n Tracks Item Linking (pairedItem) Across Filtering Nodes',
+            caption: 'Visual Drag-and-Drop: Moving Data from Left Input to Right Settings',
             mermaidCode: `graph LR
-  subgraph Step1["Step 1: Webhook Trigger (5 Incoming Items)"]
-    T0["Item 0: Alice ($100)"]
-    T1["Item 1: Bob ($20)"]
-    T2["Item 2: Charlie ($250)"]
-    T3["Item 3: Dave ($15)"]
-    T4["Item 4: Eve ($500)"]
-  end
+    subgraph LeftPane["1. INPUT PANE (Left)"]
+      D1["customer_name: 'Alex Smith'"]
+      D2["order_total: 150"]
+    end
 
-  subgraph Step2["Step 2: Filter Node (> $50)"]
-    F0["Item 0 (Alice)<br/>pairedItem: 0"]
-    F1["Item 1 (Charlie)<br/>pairedItem: 2"]
-    F2["Item 2 (Eve)<br/>pairedItem: 4"]
-  end
+    subgraph CenterPane["2. PARAMETERS PANE (Center)"]
+      M1["Email Body:<br/>'Hello {{ $json.customer_name }}, thanks for your order!'"]
+    end
 
-  subgraph Step3["Step 3: Slack Notification"]
-    N0["$('Webhook').item retrieves Alice"]
-    N1["$('Webhook').item retrieves Charlie"]
-    N2["$('Webhook').item retrieves Eve"]
-  end
+    subgraph RightPane["3. OUTPUT PANE (Right)"]
+      R1["'Hello Alex Smith, thanks for your order!'"]
+    end
 
-  T0 --> F0 --> N0
-  T2 --> F1 --> N1
-  T4 --> F2 --> N2
+    D1 -->|🖱️ Drag & Drop with Mouse| M1
+    M1 -->|Evaluates at Runtime| R1
 
-  style Step1 fill:#1E293B,stroke:#94A3B8,stroke-width:1px,color:#F8FAFC
-  style Step2 fill:#0F172A,stroke:#F59E0B,stroke-width:2px,color:#F8FAFC
-  style Step3 fill:#0F172A,stroke:#10B981,stroke-width:2px,color:#F8FAFC`
+    style LeftPane fill:#1E293B,stroke:#3B82F6,stroke-width:1px,color:#F8FAFC
+    style CenterPane fill:#0F172A,stroke:#10B981,stroke-width:2px,color:#F8FAFC
+    style RightPane fill:#065F46,stroke:#10B981,stroke-width:2px,color:#FFFFFF`
           },
-          technicalDetails: 'Essential Luxon Date Formatting in n8n Expressions:\n- Current Date ISO: `{{ $now.toISO() }}`\n- Custom Format: `{{ $now.toFormat("yyyy-MM-dd HH:mm:ss") }}`\n- Add 7 Days: `{{ $now.plus({ days: 7 }).toFormat("yyyy-MM-dd") }}`\n- Parse an incoming timestamp: `{{ DateTime.fromISO($json.createdAt).setZone("America/New_York").toFormat("ff") }}`\n- Difference in days: `{{ DateTime.fromISO($json.dueDate).diff($now, "days").days }}`',
+          technicalDetails: 'Referencing Data from Earlier Nodes:\nIf you want to grab data from a node that is 2 or 3 steps behind, you write:\n`{{ $("Node Name").item.json.field }}`\nn8n also supports simple math directly inside expressions: `{{ $json.price * 1.20 }}` (adds 20% tax).',
           workedExample: {
-            scenario: 'Generating a personalized contract notification combining data from Step 1 (Client Info) and Step 3 (Calculated Proposal).',
-            inputJson: [
-              {
-                "json": {
-                  "proposalId": "PROP-9021",
-                  "calculatedTotal": 12500,
-                  "paymentTermsDays": 30
-                }
-              }
-            ],
-            transformationLogic: 'Reference the client company name from the initial trigger node and calculate the exact invoice due date.',
-            outputJson: [
-              {
-                "json": {
-                  "slackMessage": "Proposal PROP-9021 for Acme Global generated for $12,500. Payment due on 2026-11-24.",
-                  "metadata": {
-                    "dueDate": "2026-11-24",
-                    "clientName": "Acme Global"
-                  }
-                }
-              }
-            ],
-            explanation: 'The expression for `slackMessage` is:\n`Proposal {{ $json.proposalId }} for {{ $("Webhook Trigger").item.json.company }} generated for \${{ $json.calculatedTotal.toLocaleString() }}. Payment due on {{ $now.plus({ days: $json.paymentTermsDays }).toFormat("yyyy-MM-dd") }}.`'
+            scenario: 'Generating a personalized email subject line from incoming form data.',
+            inputJson: {
+              "prospect_name": "Elena Rostova",
+              "service_requested": "Website Audit"
+            },
+            transformationLogic: 'Create a subject line: "Quote for [service] - [name]". Expression: `Quote for {{ $json.service_requested }} - {{ $json.prospect_name }}`.',
+            outputJson: {
+              "email_subject": "Quote for Website Audit - Elena Rostova"
+            },
+            explanation: 'The expression dynamically substituted Elena\'s name and her requested service into a clean, professional email subject.'
           },
           stepByStepLab: {
-            title: 'Cross-Node Data Mapping with Paired Items',
-            goal: 'Build a 3-node workflow that passes data through a filter and reliably pulls data from the original trigger.',
+            title: 'Creating Your First Dynamic Expression',
+            goal: 'Use drag-and-drop to insert a dynamic name into a sentence.',
             steps: [
               {
                 stepNumber: 1,
-                title: 'Create Multi-Item Trigger Mock',
-                instruction: 'Add a Code node with 3 items: Alice (score: 95), Bob (score: 40), Charlie (score: 85).'
+                title: 'Set Up Sample Input Data',
+                instruction: 'In your first Edit Fields node, make sure you have a field named `first_name` set to "Maya". Click "Test step".'
               },
               {
                 stepNumber: 2,
-                title: 'Add a Filter Node',
-                instruction: 'Filter where `{{ $json.score }}` is Greater than or equal to `70`.'
+                title: 'Add a Second Edit Fields Node',
+                instruction: 'Connect a second Edit Fields node after the first one. Open its settings.'
               },
               {
                 stepNumber: 3,
-                title: 'Add an Edit Fields Node',
-                instruction: 'Create field `congratulations`: `Dear {{ $json.name }}, your score of {{ $json.score }} passed!` Also add `originalInputTimestamp`: `{{ $("Mock Trigger").item.json.timestamp }}`.'
+                title: 'Drag the Name from Left to Right',
+                instruction: 'Look at the INPUT pane on the left. Find `first_name`. Click and drag it directly into the "Value" box on the right. Notice how n8n automatically writes `{{ $json.first_name }}`.'
               },
               {
                 stepNumber: 4,
-                title: 'Verify Item Linking',
-                instruction: 'Run the step and verify that only Alice and Charlie exist in the output, and each record correctly matches its original metadata.'
+                title: 'Add Friendly Text Around It',
+                instruction: 'Edit the box so it reads: Welcome to our team, {{ $json.first_name }}! We are excited to work with you.'
+              },
+              {
+                stepNumber: 5,
+                title: 'Test and Verify',
+                instruction: 'Click "Test step". Look at the Output pane on the right: It will say: "Welcome to our team, Maya! We are excited to work with you."'
               }
             ],
-            expectedResult: '2 output items with accurate, matched student data.'
+            expectedResult: 'A personalized sentence successfully generated using dynamic data from the previous step.'
+          },
+          whatShouldISee: {
+            summary: 'Your expression evaluates in real-time, showing Maya\'s name inserted into the sentence.',
+            indicators: [
+              'Below the expression box, n8n displays a live preview showing the evaluated sentence.',
+              'The output pane confirms the full message with the name replaced.'
+            ]
           },
           commonMistakes: [
             {
-              mistake: 'Using `$("Trigger").all()[0].json.email` inside a loop processing multiple items.',
-              consequence: 'Every single item receives the email of item 0, overwriting all customer data with the first customer\'s email.',
-              correction: 'Use `$("Trigger").item.json.email` so n8n automatically tracks the paired item index for each iteration.'
+              mistake: 'Typing single curly braces `{ $json.name }` instead of double `{{ $json.name }}`.',
+              consequence: 'n8n treats it as literal text and prints "{ $json.name }" instead of the real name.',
+              correction: 'Always use double curly braces `{{ }}` for dynamic expressions, or simply drag and drop with your mouse.'
             }
           ],
           knowledgeCheck: [
             {
               id: 'q5-1',
-              question: 'What is the purpose of `$("NodeName").item.json.propertyName` in n8n expressions?',
+              question: 'What do double curly braces `{{ }}` tell n8n to do?',
               options: [
-                'It always grabs the very last item in the database.',
-                'It retrieves the specific property from the upstream node that corresponds to the current item being processed via paired-item linking.',
-                'It executes the upstream node again.',
-                'It converts the property to upper-case.'
+                'Print a smiley face icon.',
+                'Look inside the incoming data and substitute the real value dynamically.',
+                'Cancel the workflow.',
+                'Send a password to Google.'
               ],
               correctIndex: 1,
-              explanation: 'The `.item` syntax relies on n8n\'s internal paired-item engine to retrieve the exact parent item from an upstream node that gave birth to the current item.'
+              explanation: 'Double curly braces signal a dynamic expression, telling n8n to fetch the real data value at runtime.'
             }
           ],
           practicalChallenge: {
-            prompt: 'Write an expression that formats an incoming date `$json.trialStarted` by adding 14 days and outputting it as "DD/MM/YYYY" in the "Europe/London" timezone.',
-            hints: ['Use `DateTime.fromISO($json.trialStarted).setZone("Europe/London").plus({ days: 14 }).toFormat("dd/MM/yyyy")`.'],
-            solutionNotes: 'This uses Luxon’s immutable date-time manipulation directly within the n8n expression parser.'
+            prompt: 'In your expression, try doing simple math! Set `subtotal = 50`. In the next node, write: `{{ $json.subtotal + 10 }}` and test the step. What appears in the output?',
+            hints: ['n8n will calculate 50 + 10 and display 60.'],
+            solutionNotes: 'Expressions can combine text and perform calculations effortlessly.'
           },
           keyTakeaways: [
-            'Use `$json` for the current item and `$("Node Name").item.json` for parent node items.',
-            'Paired-item linking prevents data cross-contamination when workflows filter or split items.',
-            'Luxon (`DateTime`, `$now`) provides native, timezone-aware date arithmetic in all expressions.'
+            'Expressions allow steps to reuse information from earlier steps.',
+            'You can create expressions effortlessly by dragging fields from the left Input pane into settings on the right.',
+            'Double curly braces `{{ $json.field }}` tell n8n to insert the live data value.'
           ],
           officialDocLinks: [
             {
-              title: 'Official n8n Expressions Documentation',
+              title: 'Official n8n Expressions Guide',
               url: 'https://docs.n8n.io/data/expressions/',
-              note: 'Comprehensive expression syntax guide, methods, and built-in variables.'
+              note: 'Comprehensive guide to mapping, formulas, and syntax.'
             }
           ]
         }
@@ -636,123 +553,127 @@ export const stage1: Stage = {
       id: 'module-6',
       number: 6,
       stageId: 'stage-1',
-      title: 'Essential Nodes and Flow Logic',
-      subtitle: 'Routing, Merging, Looping, and Batching Data',
-      description: 'Master the core flow logic nodes: Edit Fields (Set), Filter, If, Switch, Merge, Split in Batches, Loop on Items, and Wait. Learn which node to choose for any business requirement.',
-      difficulty: 'Intermediate',
-      estimatedMinutes: 65,
+      title: 'Essential Decision Nodes: If, Switch, and Merge',
+      subtitle: 'Teaching Your Workflow How to Make Smart Choices',
+      description: 'Make your workflows intelligent by adding decision forks (If node), multi-path categorization (Switch node), and combining parallel streams (Merge node).',
+      difficulty: 'Beginner',
+      estimatedMinutes: 50,
       lessons: [
         {
           id: 'lesson-6-1',
           moduleId: 'module-6',
           stageId: 'stage-1',
-          title: 'Flow Control & Routing Mastery',
-          subtitle: 'Choosing between If, Switch, Merge, and Batching Loops',
-          difficulty: 'Intermediate',
-          estimatedMinutes: 65,
-          prerequisites: ['Module 4', 'Module 5'],
-          whyItMatters: 'Real-world business logic is rarely linear. You must categorize leads, merge order items with customer profiles, batch 10,000 records to respect API rate limits, and pause executions until an external webhook or human approval arrives. Mastering core logic nodes gives you total architectural control over data flow.',
-          relatableProblem: 'You need to upload 5,000 new inventory items to Shopify. If you pass all 5,000 items directly to the Shopify node, Shopify immediately rejects the request with HTTP 429 Too Many Requests (rate limit exceeded) and your workflow crashes halfway through. By inserting a "Split In Batches" node configured for 50 items with a 1-second "Wait" node, the workflow runs smoothly without ever hitting rate limits.',
-          firstPrinciplesExplanation: 'Core Flow Logic Nodes & Their Purposes:\n\n1. Edit Fields (Set): The fundamental data transformation node. Creates, renames, modifies, or drops properties. Toggle "Keep Only Set Fields" to strip unwanted payload clutter.\n2. Filter: Discards items that do not meet specific criteria (e.g. drop inactive users). Only items that evaluate to true proceed.\n3. If: Binary branching (True pin vs False pin).\n4. Switch: Multi-way branching (e.g. Route A, Route B, Route C, or Fallback) based on values or complex rules.\n5. Merge: Combines data from two different incoming streams. Can combine by matching a shared key (SQL JOIN style), append items together, or wait for both branches to complete.\n6. Split In Batches / Loop: Chunks a large array of items into bite-sized batches (e.g. 25 at a time) to prevent memory overload and comply with third-party API rate limits.\n7. Wait: Pauses execution for a set duration (e.g. 5 minutes) or until an external webhook callback resumes it (human-in-the-loop approvals).',
+          title: 'Making Decisions: The If & Switch Nodes',
+          subtitle: 'Forks in the road: routing data based on simple rules',
+          difficulty: 'Beginner',
+          estimatedMinutes: 50,
+          prerequisites: ['Module 5'],
+          whyDoINeedThis: 'Not every customer or task is identical. You might want to send a discount coupon to customers who spend over $100, but send a standard receipt to everyone else. Decision nodes give your workflow a brain so it can choose the right path automatically.',
+          relatableProblem: 'A business sends the exact same emergency notification to their engineering team whether a website issue is a minor typo or a complete server crash. Engineers get overwhelmed by alerts and ignore real emergencies. Adding a simple decision filter fixes this immediately.',
+          firstPrinciplesExplanation: 'In real life, you make decisions based on conditions:\n"If it is raining outside, grab an umbrella; otherwise wear sunglasses."\n\nIn n8n, you do this with the IF NODE:\n- The If node has 1 input pin on the left and 2 output pins on the right:\n  • Top Output (True): Data goes here if your condition is met.\n  • Bottom Output (False): Data goes here if your condition is NOT met.\n\nExample Rule:\nValue 1: `{{ $json.order_total }}`\nComparison: is greater than\nValue 2: `100`\n\nIf the order is $150, n8n sends it down the True branch (where you connect a "Send VIP Gift" node). If the order is $40, n8n sends it down the False branch (where you connect a standard receipt node).\n\nWhat if you have more than 2 choices?\nUse the SWITCH NODE! The Switch node is like a mailroom sorting rack with multiple pigeonholes: one branch for "Sales", one for "Support", and one for "Billing".',
           visualExplanation: {
             diagramType: 'mermaid',
-            caption: 'Looping with Split In Batches and Rate-Limit Throttling',
+            caption: 'The If Node: A Fork in the Road for Your Data',
             mermaidCode: `graph LR
-  IN[1,000 Items In] --> SIB[Split In Batches<br/>Batch Size: 50]
-  SIB -->|Batch of 50| API[HTTP Request: Shopify API]
-  API --> W[Wait: 1000ms Throttle]
-  W -->|Loop Back| SIB
-  SIB -->|Done (All Batches Finished)| DONE[Final Summary Notification]
+    IN[Incoming Order] --> IF{"If Node:<br/>Order Total > $100?"}
+    IF -->|YES (True)| VIP["🎁 Send VIP Thank You & Discount"]
+    IF -->|NO (False)| STD["📄 Send Standard Order Receipt"]
 
-  style SIB fill:#0F172A,stroke:#3B82F6,stroke-width:2px,color:#F8FAFC
-  style API fill:#1E293B,stroke:#10B981,stroke-width:2px,color:#F8FAFC
-  style W fill:#1E293B,stroke:#F59E0B,stroke-width:2px,color:#F8FAFC
-  style DONE fill:#0F172A,stroke:#8B5CF6,stroke-width:2px,color:#F8FAFC`
+    style IF fill:#0F172A,stroke:#F59E0B,stroke-width:2px,color:#FFFFFF
+    style VIP fill:#065F46,stroke:#10B981,stroke-width:2px,color:#FFFFFF
+    style STD fill:#1E293B,stroke:#64748B,stroke-width:1px,color:#F8FAFC`
           },
-          technicalDetails: 'The Merge Node Modes:\n- Combine / Join: Matches items from Input 1 and Input 2 using a common identifier field (e.g. `customerId`), appending fields together like an inner or outer join.\n- Append: Simply concatenates Input 2 items onto the end of Input 1.\n- Choose Branch: Passes through whichever branch finished first.\n- Wait for Both: Pauses until both branches have finished executing before continuing.',
+          technicalDetails: 'Branching Behavior in n8n:\nWhen an If node routes data down the True branch, the False branch receives 0 items. That means any nodes connected to the False branch will simply sit quiet and not run. This is completely normal and intentional!',
           workedExample: {
-            scenario: 'Joining order records with customer billing addresses using the Merge node.',
+            scenario: 'Routing customer inquiries by urgency.',
             inputJson: {
-              "branch1_orders": [{ "orderId": 801, "userId": "usr_99", "total": 120 }],
-              "branch2_users": [{ "userId": "usr_99", "email": "dave@example.com", "tier": "Gold" }]
+              "customer": "David",
+              "urgency": "Urgent",
+              "message": "Payment system is down!"
             },
-            transformationLogic: 'Merge node configured with Mode: "Combine", Join Type: "Enrich", matching on property `userId`.',
-            outputJson: [
-              {
-                "json": {
-                  "orderId": 801,
-                  "userId": "usr_99",
-                  "total": 120,
-                  "email": "dave@example.com",
-                  "tier": "Gold"
-                }
-              }
-            ],
-            explanation: 'The Merge node matches `usr_99` across both incoming branches and outputs a unified object containing the order details and the customer profile.'
+            transformationLogic: 'Check if urgency equals "Urgent". If true, route to on-call phone alert.',
+            outputJson: {
+              "routed_to": "On-Call Emergency Slack Channel",
+              "priority": "P1 High"
+            },
+            explanation: 'Because urgency was "Urgent", the If node activated the True branch and bypassed regular support tickets.'
           },
           stepByStepLab: {
-            title: 'Building a Throttled Batch Sync Pipeline',
-            goal: 'Simulate batch processing 100 records in groups of 10 with a wait throttle.',
+            title: 'Building a Simple Decision Branch with the If Node',
+            goal: 'Connect an If node that routes high-value orders to a special VIP notification step.',
             steps: [
               {
                 stepNumber: 1,
-                title: 'Generate 100 Mock Records',
-                instruction: 'Add a Code node generating 100 items: `return Array.from({length: 100}, (_, i) => ({ json: { id: i + 1, name: "User " + (i + 1) } }));`'
+                title: 'Create Sample Order Data',
+                instruction: 'Add an Edit Fields node with two fields: `customer = "Sam"` and `order_total = 120` (Number). Click "Test step".'
               },
               {
                 stepNumber: 2,
-                title: 'Add Split In Batches',
-                instruction: 'Connect "Split In Batches" with Batch Size set to `10`.'
+                title: 'Add the If Node',
+                instruction: 'Click the "+" on the right output pin of your Edit Fields node. Search for "If" and select the If node.'
               },
               {
                 stepNumber: 3,
-                title: 'Add Action and Wait',
-                instruction: 'Connect an Edit Fields node to the batch output, then connect a Wait node set to `500 milliseconds`.'
+                title: 'Set Your Condition',
+                instruction: 'In the If node parameters, drag `order_total` into Value 1. Set the comparison operator to "is greater than", and type 100 in Value 2.'
               },
               {
                 stepNumber: 4,
-                title: 'Wire the Loop Back',
-                instruction: 'Drag a connection line from the output of the Wait node back to the input of the Split In Batches node. Connect a Slack/Notification node to the "done" output of Split In Batches.'
+                title: 'Test the If Node',
+                instruction: 'Click "Test step". Notice that under the "true" output pin you see 1 item, while under "false" you see 0 items!'
+              },
+              {
+                stepNumber: 5,
+                title: 'Connect Downstream Actions',
+                instruction: 'Connect an Edit Fields node to the "true" output pin that sets `status = "VIP Customer"`. Test the workflow to see it light up with green checkmarks.'
               }
             ],
-            expectedResult: 'The workflow loops 10 times cleanly, processing 10 items per cycle, and then triggers the done branch.'
+            expectedResult: 'A branching workflow where orders over 100 take the top path and lower orders take the bottom path.'
+          },
+          whatShouldISee: {
+            summary: 'The top True branch lights up with a green checkmark while the bottom branch remains inactive.',
+            indicators: [
+              'The If node evaluates: 120 > 100 = true.',
+              '1 item moves down the True branch.',
+              '0 items move down the False branch.'
+            ]
           },
           commonMistakes: [
             {
-              mistake: 'Forgetting to connect the loop back to the Split In Batches node.',
-              consequence: 'The workflow only processes the very first batch of 10 items and terminates prematurely, leaving 90 items unhandled.',
-              correction: 'Always ensure the terminal node in your processing loop connects back to the top-level loop node.'
+              mistake: 'Comparing a Number with text comparison (e.g. comparing "120" as text instead of a Number).',
+              consequence: 'Computers compare text alphabetically (where "9" is greater than "100"), causing incorrect branching.',
+              correction: 'Always ensure numerical fields are set to "Number" in the comparison settings.'
             }
           ],
           knowledgeCheck: [
             {
               id: 'q6-1',
-              question: 'When should you choose a Switch node instead of an If node?',
+              question: 'If an If node sends data down the "true" output pin, what happens to the nodes connected to the "false" pin?',
               options: [
-                'When you have 3 or more distinct conditional branches or routing cases based on a property value.',
-                'Only when working with Python code.',
-                'When you want to merge two databases.',
-                'Switch nodes are deprecated.'
+                'They throw an error and crash n8n.',
+                'They receive 0 items and do not execute.',
+                'They delete your workflow.',
+                'They run twice.'
               ],
-              correctIndex: 0,
-              explanation: 'While an If node is strictly binary (True or False), the Switch node cleanly supports multiple routing paths (e.g. categorizing orders into New, Processing, Shipped, or Cancelled) without cumbersome nesting.'
+              correctIndex: 1,
+              explanation: 'Nodes only run if data enters them. When a branch receives 0 items, connected downstream nodes stay quiet.'
             }
           ],
           practicalChallenge: {
-            prompt: 'Design a workflow that receives 50 customer leads, filters for leads with a valid phone number, merges each lead with their assigned sales rep based on territory, and batches the output in groups of 5.',
-            hints: ['Use Filter -> Merge (Join on territory) -> Split In Batches.'],
-            solutionNotes: 'This architecture cleanly separates sanitization, relational enrichment, and rate-limited dispatch.'
+            prompt: 'Change the `order_total` in your first node to 45. Re-test the If node and observe how the data now automatically switches and flows down the False branch instead!',
+            hints: ['Change the value, test step 1, then test the If node.'],
+            solutionNotes: 'This proves your workflow is truly dynamic: different inputs automatically take different paths!'
           },
           keyTakeaways: [
-            'Use Edit Fields to shape records and strip unwanted payload properties.',
-            'Use Split In Batches and Wait to avoid hitting third-party API rate limits.',
-            'The Merge node enables SQL-like joins between diverging asynchronous branches.'
+            'The If node is a fork in the road that divides data into True and False branches.',
+            'The Switch node lets you route data across 3 or more paths.',
+            'Branches with 0 items do not execute downstream nodes.'
           ],
           officialDocLinks: [
             {
-              title: 'Official n8n Flow Logic Nodes',
-              url: 'https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.splitinbatches/',
-              note: 'Official documentation for Split In Batches, Merge, and Switch.'
+              title: 'Official If Node Documentation',
+              url: 'https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.if/',
+              note: 'Detailed reference on conditions and comparisons.'
             }
           ]
         }

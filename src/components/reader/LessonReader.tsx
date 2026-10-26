@@ -7,6 +7,7 @@ import { Callout } from './Callout';
 import { QuizCard } from './QuizCard';
 import { ExerciseLab } from './ExerciseLab';
 import { ScribbleRing } from '../common/ScribbleRing';
+import { TermExplainerModal } from '../common/TermExplainer';
 import { useNotes } from '../../hooks/useNotes';
 import { 
   CheckCircle2, 
@@ -67,6 +68,7 @@ export const LessonReader: React.FC<LessonReaderProps> = ({
   const [showNotes, setShowNotes] = useState(false);
   const [activeSection, setActiveSection] = useState<string>('section-problem');
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [explainerTerm, setExplainerTerm] = useState<string | null>(null);
 
   const articleRef = useRef<HTMLElement>(null);
 
@@ -159,8 +161,17 @@ export const LessonReader: React.FC<LessonReaderProps> = ({
           })}
         </div>
 
-        <div className="hidden lg:flex items-center gap-2 text-[11px] text-[var(--ink3)] shrink-0 pl-3">
-          <span>{Math.round(scrollProgress)}% READ</span>
+        <div className="flex items-center gap-2 text-[11px] text-[var(--ink3)] shrink-0 pl-3">
+          <button
+            onClick={() => setExplainerTerm('Workflow')}
+            className="flex items-center gap-1 px-2.5 py-1 rounded border border-[var(--accent)] text-[var(--accent)] bg-[var(--accent)]/10 hover:bg-[var(--accent)] hover:text-white font-bold transition-colors cursor-pointer text-[10px]"
+            title="Click to look up any automation term with everyday analogies"
+          >
+            <HelpCircle className="w-3 h-3" />
+            <span className="hidden sm:inline">[ EXPLAIN A TERM ? ]</span>
+            <span className="sm:hidden">[ ? ]</span>
+          </button>
+          <span className="hidden lg:inline">{Math.round(scrollProgress)}% READ</span>
         </div>
       </nav>
 
@@ -241,6 +252,19 @@ export const LessonReader: React.FC<LessonReaderProps> = ({
           </div>
         </header>
 
+        {/* Friendly Beginner Rationale */}
+        {lesson.whyDoINeedThis && (
+          <div className="p-4 sm:p-5 rounded-xl border-2 border-emerald-500/40 bg-[var(--panel)] space-y-2">
+            <div className="flex items-center gap-2 text-emerald-500 font-bold text-xs uppercase tracking-wider">
+              <Sparkles className="w-4 h-4" />
+              <span>// WHY DO I NEED THIS? (THE PRACTICAL BENEFIT)</span>
+            </div>
+            <p className="text-xs sm:text-sm text-[var(--ink)] leading-relaxed">
+              {lesson.whyDoINeedThis}
+            </p>
+          </div>
+        )}
+
         {/* Section 1: The Relatable Business Problem */}
         <section id="section-problem" className="scroll-mt-24 space-y-3">
           <div className="flex items-center justify-between pb-1.5 border-b border-[var(--line-subtle)]">
@@ -268,11 +292,13 @@ export const LessonReader: React.FC<LessonReaderProps> = ({
         </section>
 
         {/* Section 3: Why This Technique Matters */}
-        <section id="section-importance" className="scroll-mt-24">
-          <Callout type="tip" title="// 03. WHY THIS TECHNIQUE MATTERS IN ENTERPRISE PRODUCTION">
-            {lesson.whyItMatters}
-          </Callout>
-        </section>
+        {lesson.whyItMatters && (
+          <section id="section-importance" className="scroll-mt-24">
+            <Callout type="tip" title="// 03. WHY THIS TECHNIQUE MATTERS IN ENTERPRISE PRODUCTION">
+              {lesson.whyItMatters}
+            </Callout>
+          </section>
+        )}
 
         {/* Section 4: Visual Architecture & Data Flow */}
         <section id="section-architecture" className="scroll-mt-24 space-y-4">
@@ -315,6 +341,22 @@ export const LessonReader: React.FC<LessonReaderProps> = ({
           <div className="p-4 sm:p-5 rounded-xl border border-[var(--line-subtle)] bg-[var(--panel)] text-[var(--ink)] text-xs sm:text-sm leading-relaxed whitespace-pre-line">
             {lesson.technicalDetails}
           </div>
+          {lesson.optionalAdvancedDetails && (
+            <details className="mt-4 rounded-xl border border-[var(--line-subtle)] bg-[var(--panel2)] p-4 text-xs group">
+              <summary className="font-bold text-[var(--ink)] cursor-pointer flex items-center justify-between list-none">
+                <span className="flex items-center gap-2 text-purple-400">
+                  <Layers className="w-3.5 h-3.5" />
+                  <span>// OPTIONAL DEEP-DIVE: {lesson.optionalAdvancedDetails.title}</span>
+                </span>
+                <span className="text-[10px] text-[var(--ink3)] border border-[var(--line-subtle)] px-2 py-0.5 rounded">
+                  (EXPAND ADVANCED DETAILS)
+                </span>
+              </summary>
+              <div className="mt-3 pt-3 border-t border-[var(--line-subtle)] text-[var(--ink)] whitespace-pre-line leading-relaxed text-xs">
+                {lesson.optionalAdvancedDetails.content}
+              </div>
+            </details>
+          )}
         </section>
 
         {/* Section 6: Worked Example with Real Data */}
@@ -339,8 +381,28 @@ export const LessonReader: React.FC<LessonReaderProps> = ({
         </section>
 
         {/* Section 7: Hands-on Construction Lab */}
-        <section id="section-lab" className="scroll-mt-24">
+        <section id="section-lab" className="scroll-mt-24 space-y-4">
           <ExerciseLab lab={lesson.stepByStepLab} />
+
+          {lesson.whatShouldISee && (
+            <div className="p-4 sm:p-5 rounded-xl border-2 border-blue-500/40 bg-[var(--panel)] space-y-2.5">
+              <div className="flex items-center gap-2 text-blue-500 font-bold text-xs uppercase tracking-wider">
+                <CheckCircle2 className="w-4 h-4" />
+                <span>// WHAT SHOULD I SEE? (VERIFYING YOUR SUCCESS)</span>
+              </div>
+              <p className="text-xs sm:text-sm text-[var(--ink)] leading-relaxed font-bold">
+                {lesson.whatShouldISee.summary}
+              </p>
+              <div className="space-y-1.5 pt-1">
+                {lesson.whatShouldISee.indicators.map((ind, i) => (
+                  <div key={i} className="flex items-start gap-2 text-xs text-[var(--ink2)]">
+                    <span className="text-emerald-500 font-bold">✓</span>
+                    <span>{ind}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </section>
 
         {/* Section 8: Common Mistakes & Edge Cases */}
@@ -562,6 +624,14 @@ export const LessonReader: React.FC<LessonReaderProps> = ({
           </button>
         </div>
       </aside>
+
+      {/* 3-Level Terminology Explainer Modal */}
+      <TermExplainerModal
+        termName={explainerTerm || 'Workflow'}
+        isOpen={Boolean(explainerTerm)}
+        onClose={() => setExplainerTerm(null)}
+        onSelectTerm={(t) => setExplainerTerm(t)}
+      />
     </article>
   );
 };

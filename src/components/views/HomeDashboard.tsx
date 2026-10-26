@@ -164,6 +164,118 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
       ) : (
         <>
           {/* ─────────────────────────────────────────────────────────────
+              2.5. ABSOLUTE BEGINNER PATHWAY (START HERE)
+              ───────────────────────────────────────────────────────────── */}
+          <section className="archival-card p-5 sm:p-7 border-2 border-emerald-500/50 bg-[var(--panel)] space-y-5">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-[var(--line-subtle)] text-xs">
+              <div className="flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="font-bold text-emerald-500">// START HERE: THE ABSOLUTE BEGINNER PATHWAY</span>
+              </div>
+              <span className="text-[11px] text-[var(--ink3)]">
+                NO PRIOR CODING EXPERIENCE REQUIRED
+              </span>
+            </div>
+
+            <div className="space-y-3">
+              <h2 className="text-xl sm:text-2xl font-bold text-[var(--ink)] leading-snug">
+                Learn n8n from the very beginning, step by step
+              </h2>
+              <p className="text-xs sm:text-sm text-[var(--ink2)] leading-relaxed max-w-3xl">
+                You do not need to know what a variable, database, or API is. We guide you through everyday analogies, simple diagrams, and gentle hands-on workflows so you understand precisely how each piece works.
+              </p>
+
+              {/* 4-Step Beginner Journey Cards */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-2">
+                <div 
+                  onClick={() => onSelectLesson('lesson-0-1')}
+                  className="p-3.5 rounded-xl border border-[var(--line-subtle)] bg-[var(--panel2)] hover:border-[var(--line)] cursor-pointer transition-all space-y-1.5"
+                >
+                  <div className="text-[10px] font-bold text-emerald-500 uppercase">
+                    Step 1 • Orientation
+                  </div>
+                  <div className="text-xs font-bold text-[var(--ink)]">
+                    What is Automation?
+                  </div>
+                  <div className="text-[11px] text-[var(--ink2)] leading-relaxed">
+                    How everyday tasks (like brewing tea) become digital workflows.
+                  </div>
+                </div>
+
+                <div 
+                  onClick={() => onSelectLesson('lesson-0-2')}
+                  className="p-3.5 rounded-xl border border-[var(--line-subtle)] bg-[var(--panel2)] hover:border-[var(--line)] cursor-pointer transition-all space-y-1.5"
+                >
+                  <div className="text-[10px] font-bold text-blue-500 uppercase">
+                    Step 2 • Setup
+                  </div>
+                  <div className="text-xs font-bold text-[var(--ink)]">
+                    Easy Browser Setup
+                  </div>
+                  <div className="text-[11px] text-[var(--ink2)] leading-relaxed">
+                    Open n8n in 60 seconds with zero installation or terminal tools.
+                  </div>
+                </div>
+
+                <div 
+                  onClick={() => onSelectLesson('lesson-0-3')}
+                  className="p-3.5 rounded-xl border border-[var(--line-subtle)] bg-[var(--panel2)] hover:border-[var(--line)] cursor-pointer transition-all space-y-1.5"
+                >
+                  <div className="text-[10px] font-bold text-[var(--accent)] uppercase">
+                    Step 3 • Hands-on Lab
+                  </div>
+                  <div className="text-xs font-bold text-[var(--ink)]">
+                    Your First Message
+                  </div>
+                  <div className="text-[11px] text-[var(--ink2)] leading-relaxed">
+                    Connect 3 simple blocks: Manual Start ──► Set Message ──► See Result.
+                  </div>
+                </div>
+
+                <div 
+                  onClick={() => onSelectLesson('lesson-2-1')}
+                  className="p-3.5 rounded-xl border border-[var(--line-subtle)] bg-[var(--panel2)] hover:border-[var(--line)] cursor-pointer transition-all space-y-1.5"
+                >
+                  <div className="text-[10px] font-bold text-purple-400 uppercase">
+                    Step 4 • Mechanics
+                  </div>
+                  <div className="text-xs font-bold text-[var(--ink)]">
+                    Understand the Canvas
+                  </div>
+                  <div className="text-[11px] text-[var(--ink2)] leading-relaxed">
+                    See how input pins, output pins, and green checkmarks work.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 border-t border-[var(--line-subtle)]">
+              <div className="flex flex-wrap items-center gap-3 text-xs text-[var(--ink2)]">
+                <span className="flex items-center gap-1 text-emerald-500 font-bold">
+                  ✓ ZERO CODE NEEDED
+                </span>
+                <span className="text-[var(--ink3)]">•</span>
+                <span className="flex items-center gap-1 font-bold">
+                  ✓ 3-LEVEL EXPLANATIONS
+                </span>
+                <span className="text-[var(--ink3)]">•</span>
+                <span className="flex items-center gap-1 font-bold">
+                  ✓ INTERACTIVE LABS
+                </span>
+              </div>
+
+              <button
+                onClick={() => onSelectLesson('lesson-0-1')}
+                className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl border-2 border-emerald-500 bg-emerald-600 text-white font-bold text-xs hover:bg-emerald-500 transition-all cursor-pointer shadow-md"
+              >
+                <Play className="w-3.5 h-3.5 fill-current" />
+                <span>START YOUR FIRST LESSON (NO CODING REQUIRED)</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </section>
+
+          {/* ─────────────────────────────────────────────────────────────
               3. FEATURED / RECOMMENDED NEXT LESSON (ARCHIVAL HERO)
               ───────────────────────────────────────────────────────────── */}
           <section className="archival-card p-5 sm:p-7 border-2 border-[var(--line)] space-y-5">
